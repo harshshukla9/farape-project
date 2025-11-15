@@ -21,7 +21,7 @@ export async function GET() {
       screenshotUrls: [],
       tags: ["nft", "farcaster", "mint", "FarApe"],
       primaryCategory: "social",
-      buttonTitle: "Launch Ape Run",
+      buttonTitle: "Launch Ape Runc",
       splashImageUrl: `${APP_URL}/images/splash.png`,
       splashBackgroundColor: "#0f172a",
       webhookUrl: `${APP_URL}/api/webhook`,

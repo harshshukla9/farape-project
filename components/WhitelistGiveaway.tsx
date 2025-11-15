@@ -66,7 +66,7 @@ export function WhitelistGiveaway() {
         completed: false,
         isLoading: false,
         action: () => {
-          actions?.viewCast({ hash: '0xc756f567' as `0x${string}` })
+          actions?.viewCast({ hash: '0xf8978e1b' as `0x${string}` })
         },
       },
       {
