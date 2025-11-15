@@ -7,9 +7,9 @@ export async function GET() {
     // {
 
     "accountAssociation": {
-      "header": "eyJmaWQiOjEzMTcwNzEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg5REZDMjIyZDc4NDg1QjgzRTQ4OWEwNENBZDU2NDE3QWFBOTI0NzY4In0",
-      "payload": "eyJkb21haW4iOiJmcmFwZWQtbmZ0LnZlcmNlbC5hcHAifQ",
-      "signature": "HZIXbig06Wi78aWVtnAfiItSr4o5/Req/+8ntViPEZ4iSB/qpkq91UBwCQflmlqIZ78s7O4ao+LyhAip9lmK3Bs="
+    "header": "eyJmaWQiOjEzMTcwNzEsInR5cGUiOiJhdXRoIiwia2V5IjoiMHhiNmVEMzEzZEMzMWZjNjBEMzhDQTQ5MGYzMDYxNzk5NzkzQzE3NWEwIn0",
+    "payload": "eyJkb21haW4iOiJmYXJhcGUtcHJvamVjdC1tdS52ZXJjZWwuYXBwIn0",
+    "signature": "j1IKTdtCjwAyFE1thYehHpbmPFbOkEn865vFT0/SXQdIityZDa+t9KhHl1K0FkApLgnR/zQeoZF3mmJZM1zXERs="
         },
     // },
     frame: {
