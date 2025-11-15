@@ -449,7 +449,7 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
       (ctx as any).globalCompositeOperation = "source-over";
 
       // Score
-      ctx.font = "36px 'Press Start 2P'";
+      ctx.font = "700 36px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
       ctx.fillText(state.collectiblesCollected.toString(), WIDTH / 2, 50);
@@ -474,7 +474,7 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
         if (centerY > HEIGHT - (SAFE_MARGIN + 40)) centerY = HEIGHT - (SAFE_MARGIN + 40);
         const text = t.text;
         const baseFontSize = 28;
-        ctx.font = `${baseFontSize}px 'Press Start 2P'`;
+        ctx.font = `700 ${baseFontSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
         const textMetrics = ctx.measureText(text);
         const paddingX = 22;
         const paddingY = 14;
@@ -534,16 +534,16 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
         ctx.fillStyle = "#0b0b0b";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.font = "20px 'Press Start 2P'";
+        ctx.font = "700 20px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
         ctx.fillText("Game Over", WIDTH / 2, y + 18);
-        ctx.font = "12px 'Press Start 2P'";
+        ctx.font = "500 12px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
         const lines = wrapText(ctx, state.endMessage, panelW - 32);
         let ty = y + 62;
         for (const line of lines) {
           ctx.fillText(line, WIDTH / 2, ty);
           ty += 18;
         }
-        ctx.font = "10px 'Press Start 2P'";
+        ctx.font = "400 10px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
         ctx.fillText("Tap to Play Again", WIDTH / 2, y + panelH - 28);
         ctx.restore();
       }

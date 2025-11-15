@@ -19,7 +19,7 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
       <div className="text-center space-y-6 max-w-2xl w-full">
         <h1 
           className="text-3xl font-bold text-yellow-300 mb-4"
-          style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '28px', lineHeight: '1.5' }}
+          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '28px', lineHeight: '1.5' }}
         >
           NFT Burn to Earn
         </h1>
@@ -27,15 +27,15 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
         <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-8">
           <div className="space-y-6">
             <div className="bg-red-900/50 border-2 border-red-500 rounded-lg p-6">
-              <p className="text-red-300 text-xs mb-4" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '10px', lineHeight: '1.8' }}>
-                ⚠️ Warning: Burning NFTs is permanent and cannot be undone!
+              <p className="text-red-300 text-xs mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px', lineHeight: '1.8' }}>
+                Warning: Burning NFTs is permanent and cannot be undone!
               </p>
             </div>
 
             <div className="bg-purple-800/50 border-2 border-yellow-400 rounded-lg p-6">
               <h3 
                 className="text-yellow-300 mb-4"
-                style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '16px' }}
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
                 Select NFT to Burn
               </h3>
@@ -54,18 +54,20 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
                       <div className="text-left">
                         <p 
                           className="text-white mb-1"
-                          style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px' }}
+                          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}
                         >
                           {nft.name}
                         </p>
                         <p 
                           className="text-green-400"
-                          style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '9px' }}
+                          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}
                         >
-                          🔥 Burn for: {nft.reward}
+                          Burn for: {nft.reward}
                         </p>
                       </div>
-                      <div className="text-3xl">🦍</div>
+                      <div className="flex items-center justify-center">
+                        <img src="/4.png" alt="NFT" className="w-12 h-12 object-contain" />
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -75,15 +77,15 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
             {selectedNFT && (
               <button 
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
-                style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '14px' }}
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
               >
-                🔥 Burn NFT
+                Burn NFT
               </button>
             )}
 
             <div className="bg-green-900/50 border-2 border-green-500 rounded-lg p-4">
-              <p className="text-green-300 text-xs" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '9px', lineHeight: '1.6' }}>
-                💡 Tip: Higher rarity NFTs yield more tokens when burned!
+              <p className="text-green-300 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px', lineHeight: '1.6' }}>
+                Tip: Higher rarity NFTs yield more tokens when burned!
               </p>
             </div>
           </div>
@@ -92,7 +94,7 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
         <button
           onClick={onBack}
           className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
-          style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '16px' }}
+          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
         >
           Back
         </button>

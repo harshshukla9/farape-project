@@ -29,7 +29,7 @@ export function WalletConnectButton() {
       <div className="w-full">
         <div className="bg-black/50 border-2 border-yellow-500 rounded-lg p-2.5 flex items-center justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <div className="text-yellow-300 mb-1" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '8px', lineHeight: '1.2' }}>
+            <div className="text-yellow-300 mb-1" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '8px', lineHeight: '1.2' }}>
               WALLET
             </div>
             <div className="text-white font-mono truncate" style={{ fontSize: '10px', lineHeight: '1.2' }}>
@@ -41,7 +41,7 @@ export function WalletConnectButton() {
             onClick={handleDisconnect}
             className="flex-shrink-0 px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded border-2 border-black transition-all min-w-[24px]"
             title="Disconnect Wallet"
-            style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '12px', lineHeight: '1' }}
+            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '12px', lineHeight: '1' }}
           >
             ×
           </button>
@@ -56,7 +56,7 @@ export function WalletConnectButton() {
       onClick={handleConnect}
       disabled={isPending}
       className="w-full px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl disabled:opacity-50"
-      style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '10px', lineHeight: '1.4' }}
+      style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px', lineHeight: '1.4' }}
     >
       {isPending ? 'Connecting...' : 'Connect Wallet'}
     </button>

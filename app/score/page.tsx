@@ -64,73 +64,105 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="leaderboard-container">
-      <div className="leaderboard-header">
-        <Link href="/" className="leaderboard-back-btn">
-          ← Back to Game
-        </Link>
-        <h1 className="leaderboard-title">🏆 Leaderboard</h1>
-        <p className="leaderboard-subtitle">Top Players</p>
-      </div>
-
-      {loading ? (
-        <div className="leaderboard-loading-content">
-          <div className="loading-spinner"></div>
-          <p>Loading scores...</p>
-        </div>
-      ) : error ? (
-        <div className="leaderboard-error">
-          <p>{error}</p>
-        </div>
-      ) : leaderboard.length === 0 ? (
-        <div className="leaderboard-empty">
-          <p>No scores yet. Be the first to play!</p>
-        </div>
-      ) : (
-        <div className="leaderboard-content">
-          <div className="leaderboard-list">
-            {leaderboard.map((entry, index) => (
-              <div
-                key={`${entry.fid}-${entry.timestamp}`}
-                className={`leaderboard-item ${index < 3 ? 'leaderboard-item-top' : ''}`}
-              >
-                <div className="leaderboard-rank">
-                  <span className="rank-badge">{getRankEmoji(index)}</span>
-                </div>
-                <div className="leaderboard-user">
-                  {entry.pfpUrl && (
-                    <img
-                      src={entry.pfpUrl}
-                      alt={entry.displayName || entry.username || 'User'}
-                      className="leaderboard-avatar"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                      }}
-                    />
-                  )}
-                  {!entry.pfpUrl && (
-                    <div className="leaderboard-avatar-placeholder">
-                      {(entry.displayName || entry.username || 'U')[0].toUpperCase()}
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
+      <div className="text-center space-y-6 max-w-2xl w-full">
+        <h1 
+          className="text-4xl font-bold text-yellow-300 mb-4"
+          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '32px', lineHeight: '1.5' }}
+        >
+          Leaderboard
+        </h1>
+        
+        <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-8">
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="loading-spinner mx-auto mb-4"></div>
+              <p className="text-white" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>Loading scores...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-red-300" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>{error}</p>
+            </div>
+          ) : leaderboard.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-white" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>No scores yet. Be the first to play!</p>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+              {leaderboard.map((entry, index) => (
+                <div
+                  key={`${entry.fid}-${entry.timestamp}`}
+                  className={`bg-purple-800/50 border-2 rounded-lg p-4 flex items-center gap-4 transition-all hover:bg-purple-700/50 ${
+                    index < 3 ? 'border-yellow-400' : 'border-purple-600'
+                  }`}
+                >
+                  <div className="min-w-[50px] text-center">
+                    <span 
+                      className="text-2xl font-bold text-yellow-300"
+                      style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+                    >
+                      {getRankEmoji(index)}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex items-center gap-3">
+                    {entry.pfpUrl && (
+                      <img
+                        src={entry.pfpUrl}
+                        alt={entry.displayName || entry.username || 'User'}
+                        className="w-12 h-12 rounded-full border-2 border-yellow-500"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    )}
+                    {!entry.pfpUrl && (
+                      <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold text-xl border-2 border-yellow-400">
+                        {(entry.displayName || entry.username || 'U')[0].toUpperCase()}
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <div 
+                        className="text-white font-bold"
+                        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+                      >
+                        {entry.displayName || entry.username || `FID: ${entry.fid}`}
+                      </div>
+                      <div 
+                        className="text-gray-400 text-xs"
+                        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}
+                      >
+                        {formatAddress(entry.walletAddress)}
+                      </div>
                     </div>
-                  )}
-                  <div className="leaderboard-user-info">
-                    <div className="leaderboard-username">
-                      {entry.displayName || entry.username || `FID: ${entry.fid}`}
+                  </div>
+                  <div className="text-right">
+                    <div 
+                      className="text-yellow-300 font-bold text-2xl"
+                      style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+                    >
+                      {entry.score}
                     </div>
-                    <div className="leaderboard-wallet">
-                      {formatAddress(entry.walletAddress)}
+                    <div 
+                      className="text-gray-400 text-xs"
+                      style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
+                    >
+                      Base
                     </div>
                   </div>
                 </div>
-                <div className="leaderboard-score">
-                  <span className="score-value">{entry.score}</span>
-                  <span className="score-label">Base</span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+
+        <Link
+          href="/"
+          className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 border-4 border-black shadow-lg inline-block"
+          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
+        >
+          Back
+        </Link>
+      </div>
     </div>
   )
 }

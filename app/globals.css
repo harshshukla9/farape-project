@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 * {
   margin: 0;
@@ -16,7 +16,7 @@ body {
   height: 100%;
   background: #000;
   color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -65,7 +65,7 @@ body:not(.leaderboard-page) {
   transform: translate(-50%, -50%);
   padding: 20px 60px;
   font-size: 28px;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: bold;
   color: #fff;
   background: linear-gradient(135deg, #0052ff 0%, #0040cc 100%);
@@ -112,7 +112,7 @@ body:not(.leaderboard-page) {
   font-size: 14px;
   line-height: 1.6;
   color: #fff;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .howToPlay p:first-child {
@@ -150,7 +150,7 @@ body:not(.leaderboard-page) {
   left: 16px;
   padding: 10px 20px;
   font-size: 14px;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: bold;
   color: #fff;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -192,7 +192,7 @@ body:not(.leaderboard-page) {
   right: 16px;
   padding: 10px 20px;
   font-size: 14px;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: bold;
   color: #fff;
   background: linear-gradient(135deg, #0052ff 0%, #0040cc 100%);
@@ -243,14 +243,14 @@ body:not(.leaderboard-page) {
 
 .wallet-label {
   font-size: 11px;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #0052ff;
   text-transform: uppercase;
 }
 
 .wallet-text {
   font-size: 12px;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #fff;
   background: rgba(0, 82, 255, 0.2);
   padding: 4px 8px;
@@ -327,7 +327,7 @@ body:not(.leaderboard-page) {
 }
 
 .loading-screen h1 {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 24px;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -388,7 +388,7 @@ body:not(.leaderboard-page) {
 
 .leaderboard-back-btn {
   position: absolute;
-  left: 0;
+  left: 70px;
   top: 0;
   padding: 10px 20px;
   background: rgba(255, 255, 255, 0.1);
@@ -400,11 +400,12 @@ body:not(.leaderboard-page) {
   font-weight: 600;
   transition: all 0.3s ease;
   font-size: 14px;
+  z-index: 10;
 }
 
 .leaderboard-back-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateX(-3px);
+  transform: translateX(3px);
 }
 
 .leaderboard-title {

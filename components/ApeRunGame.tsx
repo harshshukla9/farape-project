@@ -246,7 +246,7 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
     }
 
     function drawLightRays(timestamp: number) {
-      if (state.flareStartTime === null) return
+      if (!ctx || state.flareStartTime === null) return
 
       const elapsed = timestamp - state.flareStartTime
       let lightOpacity = 0
@@ -342,14 +342,16 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
     }
 
     function drawCollectibles() {
-      ctx.font = "36px 'Press Start 2P'"
+      if (!ctx) return
+      ctx.font = "700 36px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
       ctx.fillStyle = 'white'
       ctx.textAlign = 'center'
       ctx.fillText(state.collectiblesCollected.toString(), WIDTH / 2, 50)
     }
 
     function drawDistance() {
-      ctx.font = "16px 'Press Start 2P'"
+      if (!ctx) return
+      ctx.font = "500 16px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
       ctx.fillStyle = 'white'
       ctx.textAlign = 'left'
       ctx.fillText(`Dist: ${Math.floor(state.distance)}`, 10, 30)
@@ -508,6 +510,7 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
     }
 
     function drawScene(timestamp: number) {
+      if (!ctx) return
       const cycleProgress = (state.distance % state.CYCLE_DURATION) / state.CYCLE_DURATION
       const gradient = ctx.createLinearGradient(0, 0, 0, HEIGHT)
       let topColor: string, bottomColor: string
@@ -995,7 +998,7 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
           id="startButton"
           onClick={handleStartClick}
           className="absolute top-[85%] left-1/2 -translate-x-1/2 -translate-y-1/2 px-10 py-5 text-2xl text-white bg-[#ffcc00] border-4 border-black rounded-[10px] cursor-pointer text-center uppercase transition-all duration-100 hover:bg-[#ffd700] active:-translate-y-[46%] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)]"
-          style={{ fontFamily: '"Press Start 2P", cursive' }}
+          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
         >
           Start
         </button>
@@ -1004,7 +1007,7 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
         <div
           id="howToPlay"
           className="absolute top-[15%] left-1/2 -translate-x-1/2 text-xs text-white text-center bg-black/70 p-2.5 border-4 border-[#ffcc00] rounded-[10px] max-w-[330px] leading-[1.4]"
-          style={{ fontFamily: '"Press Start 2P", cursive' }}
+          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
         >
           <p className="my-2">How to Play</p>
           <p className="my-2">- Swipe or use arrows to move.</p>
@@ -1023,14 +1026,13 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
           {/* Modal */}
           <div 
             className="relative bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 border-4 border-[#ffcc00] rounded-[20px] p-8 max-w-[350px] w-[90%] shadow-[0_0_30px_rgba(255,204,0,0.5)] animate-scaleUp"
-            style={{ fontFamily: '"Press Start 2P", cursive' }}
+            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
           >
             {/* Game Over Title */}
             <div className="text-center mb-6">
               <h2 className="text-4xl text-red-500 mb-2 animate-pulse drop-shadow-[0_0_20px_rgba(239,68,68,0.8)]">
                 GAME OVER
               </h2>
-              <div className="text-6xl my-4 animate-bounce">💀</div>
             </div>
 
             {/* Stats Container */}
@@ -1058,7 +1060,7 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
               {finalScore > 10 && (
                 <div className="text-center">
                   <p className="text-green-400 text-xs animate-pulse">
-                    🏆 Great Job! 🏆
+                    Great Job!
                   </p>
                 </div>
               )}
@@ -1069,16 +1071,16 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
               <button
                 onClick={handleRestartClick}
                 className="w-full px-8 py-4 text-xl text-black bg-[#ffcc00] hover:bg-[#ffd700] border-4 border-black rounded-[10px] cursor-pointer uppercase transition-all duration-100 active:translate-y-[2px] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_0_#000000,0_10px_15px_rgba(255,204,0,0.4)]"
-                style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '16px' }}
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
-                🔄 Restart
+                Restart
               </button>
               
               {onBackToMenu && (
                 <button
                   onClick={onBackToMenu}
                   className="w-full px-8 py-4 text-xl text-white bg-purple-600 hover:bg-purple-700 border-4 border-black rounded-[10px] cursor-pointer uppercase transition-all duration-100 active:translate-y-[2px] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_0_#000000,0_10px_15px_rgba(147,51,234,0.4)]"
-                  style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '14px' }}
+                  style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
                 >
                   ← Back to Menu
                 </button>

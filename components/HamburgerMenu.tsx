@@ -36,7 +36,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
       <button
         onClick={toggleMenu}
         className="fixed top-3 left-3 z-50 p-2.5 bg-yellow-500 hover:bg-yellow-600 border-[3px] border-black rounded-lg transition-all duration-200 shadow-lg"
-        style={{ fontFamily: '"Press Start 2P", cursive' }}
+        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
         aria-label="Toggle Menu"
       >
         <div className="w-5 h-4 flex flex-col justify-between">
@@ -66,7 +66,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             <div className="flex items-center justify-between mb-3">
               <h2 
                 className="text-yellow-300 text-center flex-1"
-                style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '14px', lineHeight: '1.3' }}
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px', lineHeight: '1.3' }}
               >
                 Menu
               </h2>
@@ -84,7 +84,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             <button
               onClick={() => handleNavigate('buy-nft')}
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.3' }}
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
               Buy NFT
             </button>
@@ -92,7 +92,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             <button
               onClick={() => handleNavigate('daily-reward')}
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.3' }}
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
               Daily Reward
             </button>
@@ -100,7 +100,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             <button
               onClick={() => handleNavigate('your-nft')}
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.3' }}
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
               Your NFT
             </button>
@@ -108,7 +108,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             <button
               onClick={() => handleNavigate('tournament')}
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.3' }}
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
               Tournament
             </button>
@@ -116,7 +116,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             <button
               onClick={() => handleNavigate('burn-to-earn')}
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.3' }}
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
               Burn to Earn
             </button>
@@ -124,15 +124,15 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             <button
               onClick={() => handleNavigate('leaderboard')}
               className="w-full px-3 py-2.5 bg-purple-500 hover:bg-purple-600 text-white font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.3' }}
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
-              🏆 Leaderboard
+              Leaderboard
             </button>
 
             <button
               onClick={() => handleNavigate('main-menu')}
               className="w-full px-3 py-2.5 bg-gray-600 hover:bg-gray-700 text-white font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.3' }}
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
               Main Menu
             </button>
@@ -140,7 +140,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
           
           {/* Footer spacing */}
           <div className="flex-shrink-0 p-3 pt-2 border-t-2 border-yellow-500/30">
-            <p className="text-center text-gray-400" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '8px', lineHeight: '1.2' }}>
+            <p className="text-center text-gray-400" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '8px', lineHeight: '1.2' }}>
               🦍 Ape Run
             </p>
           </div>
