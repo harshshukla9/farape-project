@@ -1,52 +1,4 @@
-export interface Cloud {
-  x: number
-  y: number
-  image: HTMLImageElement
-  scale: number
-  opacity: number
-}
-
-export interface Star {
-  x: number
-  y: number
-  size?: number
-  radius: number
-  opacity?: number
-  shining: boolean
-  shineStart: number
-  shineDuration: number
-}
-
-export interface Branch {
-  x: number
-  y: number
-  width: number
-  height: number
-  collisionHeight: number
-  side: "left" | "right"
-  inFront?: boolean
-}
-
-export interface Collectible {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-export interface Toast {
-  text: string
-  start: number
-  duration: number
-}
-
-export interface Monkey {
-  side: "left" | "middle" | "right"
-  width: number
-  height: number
-  y: number
-}
-
+// Game State Types
 export interface GameState {
   gameRunning: boolean
   gameOver: boolean
@@ -88,6 +40,48 @@ export interface GameState {
   BRANCH_MIN_SPACING: number
   BRANCH_MAX_SPACING: number
   FLARE_DURATION?: number
+}
+
+export interface Branch {
+  x: number
+  y: number
+  width: number
+  height: number
+  collisionHeight: number
+  side: 'left' | 'right'
+  inFront?: boolean
+}
+
+export interface Collectible {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+export interface Cloud {
+  x: number
+  y: number
+  image: HTMLImageElement
+  scale: number
+  opacity: number
+}
+
+export interface Star {
+  x: number
+  y: number
+  size?: number
+  radius: number
+  opacity?: number
+  shining: boolean
+  shineStart: number
+  shineDuration: number
+}
+
+export interface Toast {
+  text: string
+  start: number
+  duration: number
 }
 
 export interface GameImages {

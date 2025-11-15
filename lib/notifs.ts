@@ -4,7 +4,7 @@ import {
   sendNotificationResponseSchema,
 } from "@farcaster/miniapp-sdk";
 import { getUserNotificationDetails } from "./kv";
-
+//notification
 type SendFrameNotificationResult =
   | {
       state: "error";
