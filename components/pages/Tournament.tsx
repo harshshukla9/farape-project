@@ -1,10 +1,16 @@
 'use client'
 
+import { useAccount } from 'wagmi'
+import { useAlchemyNFTs } from '@/app/hooks/useAlchemyNFTs'
+import { WalletConnectButton } from '@/components/WalletConnectButton'
+
 interface TournamentProps {
   onBack: () => void
 }
 
 export default function Tournament({ onBack }: TournamentProps) {
+  const { isConnected } = useAccount()
+  const { hasNFT, isLoading: isLoadingNFT } = useAlchemyNFTs()
   const leaderboard = [
     { rank: 1, player: 'ApeKing', score: 9850, prize: '$40' },
     { rank: 2, player: 'BananaQueen', score: 8750, prize: '$30' },
@@ -87,12 +93,41 @@ export default function Tournament({ onBack }: TournamentProps) {
               </div>
             </div>
 
-            <button 
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
-              style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '14px' }}
-            >
-              Enter Tournament
-            </button>
+            {!isConnected ? (
+              <div className="space-y-3">
+                <p className="text-white text-sm mb-3" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '11px', lineHeight: '1.6' }}>
+                  Connect wallet to check NFT status
+                </p>
+                <WalletConnectButton />
+              </div>
+            ) : isLoadingNFT ? (
+              <div className="text-center py-4">
+                <p className="text-yellow-300 mb-2" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '12px' }}>
+                  Checking NFT status...
+                </p>
+                <div className="animate-spin text-3xl">🦍</div>
+              </div>
+            ) : hasNFT ? (
+              <button 
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
+                style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '14px' }}
+              >
+                ✓ Enter Tournament
+              </button>
+            ) : (
+              <div className="space-y-3">
+                <button 
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
+                  style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '14px' }}
+                  onClick={onBack}
+                >
+                  Buy NFT to Enter
+                </button>
+                <p className="text-red-300 text-xs text-center" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '9px', lineHeight: '1.6' }}>
+                  ✗ You need to own an Ape NFT to participate
+                </p>
+              </div>
+            )}
 
             <p className="text-gray-300 text-xs" style={{ fontFamily: '"Press Start 2P", cursive', fontSize: '9px', lineHeight: '1.6' }}>
               * Requires NFT ownership to participate
