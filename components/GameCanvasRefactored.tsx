@@ -144,7 +144,7 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
         if (!state.firstSwipeDone) {
           if (state.monkey.side !== newSide) {
             state.monkey.side = newSide;
-            currentMonkeyImg = images.monkeyImg1;
+            currentMonkeyImg = images!.monkeyImg1;
             state.firstSwipeDone = true;
             state.transitionStart = performance.now();
             window.FarcadeSDK?.singlePlayer?.actions?.hapticFeedback?.();
@@ -187,7 +187,7 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
       if (!state.firstSwipeDone) {
         if (state.monkey.side !== newSide) {
           state.monkey.side = newSide;
-          currentMonkeyImg = images.monkeyImg1;
+          currentMonkeyImg = images!.monkeyImg1;
           state.firstSwipeDone = true;
           state.transitionStart = performance.now();
           window.FarcadeSDK?.singlePlayer?.actions?.hapticFeedback?.();
@@ -229,13 +229,13 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
 
     function startGame() {
       if (
-        !images.monkeyImg1.complete ||
-        !images.monkeyImg2.complete ||
-        !images.monkeyMiddleImg1.complete ||
-        !images.monkeyMiddleImg2.complete ||
-        !images.cloudImg1.complete ||
-        !images.cloudImg2.complete ||
-        !images.cloudImg3.complete
+        !images!.monkeyImg1.complete ||
+        !images!.monkeyImg2.complete ||
+        !images!.monkeyMiddleImg1.complete ||
+        !images!.monkeyMiddleImg2.complete ||
+        !images!.cloudImg1.complete ||
+        !images!.cloudImg2.complete ||
+        !images!.cloudImg3.complete
       ) {
         setTimeout(startGame, 100);
         return;
@@ -261,7 +261,7 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
       state.monkey.side = "middle";
       state.monkey.y = HEIGHT - 250;
       state.frameCount = 0;
-      currentMonkeyImg = images.monkeyMiddleImg1;
+      currentMonkeyImg = images!.monkeyMiddleImg1;
       state.firstSwipeDone = false;
       state.transitionStart = null;
       state.flareStartTime = null;
@@ -281,7 +281,7 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
       state.clouds = [];
       for (let i = 0; i < GAME_CONSTANTS.MAX_CLOUDS; i++) {
         // Inline spawn cloud
-        const randomImage = images.cloudImages[Math.floor(Math.random() * images.cloudImages.length)];
+        const randomImage = images!.cloudImages[Math.floor(Math.random() * images!.cloudImages.length)];
         state.clouds.push({
           x: WIDTH + Math.random() * 100,
           y: Math.random() * (HEIGHT * 0.4),
@@ -330,7 +330,7 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
         deltaTime: state.deltaTime,
         WIDTH,
         HEIGHT,
-        cloudImages: images.cloudImages,
+        cloudImages: images!.cloudImages,
         onCloudsUpdate: (clouds) => {
           state.clouds = clouds;
         },
@@ -421,12 +421,12 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
       // Monkey
       const monkeyX = getMonkeyX(state.monkey.side, TREE_X, TREE_WIDTH, state.monkey.width);
       if (
-        images.monkeyImg1.complete &&
-        images.monkeyImg2.complete &&
-        images.monkeyMiddleImg1.complete &&
-        images.monkeyMiddleImg2.complete
+        images!.monkeyImg1.complete &&
+        images!.monkeyImg2.complete &&
+        images!.monkeyMiddleImg1.complete &&
+        images!.monkeyMiddleImg2.complete
       ) {
-        drawUserFace(ctx, images.userFaceImg, monkeyX, state.monkey.y, state.monkey.width);
+        drawUserFace(ctx, images!.userFaceImg, monkeyX, state.monkey.y, state.monkey.width);
         const off = createMonkeyWithCutout(currentMonkeyImg, state.monkey.width, state.monkey.height);
         ctx.save();
         if (state.monkey.side === "right") {
@@ -572,9 +572,9 @@ export default function GameCanvas({ userContext, walletAddress }: GameCanvasPro
         if (state.frameCount >= 10) {
           if (state.monkey.side === "middle") {
             currentMonkeyImg =
-              currentMonkeyImg === images.monkeyMiddleImg1 ? images.monkeyMiddleImg2 : images.monkeyMiddleImg1;
+              currentMonkeyImg === images!.monkeyMiddleImg1 ? images!.monkeyMiddleImg2 : images!.monkeyMiddleImg1;
           } else {
-            currentMonkeyImg = currentMonkeyImg === images.monkeyImg1 ? images.monkeyImg2 : images.monkeyImg1;
+            currentMonkeyImg = currentMonkeyImg === images!.monkeyImg1 ? images!.monkeyImg2 : images!.monkeyImg1;
           }
           state.frameCount = 0;
         }

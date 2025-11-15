@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/mongodb'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { fid, username, pfpUrl, tasks, timestamp } = body
+    const { fid, username, tasks } = body
 
     if (!fid || !tasks || tasks.length === 0) {
       return NextResponse.json(
@@ -22,29 +21,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { db } = await connectToDatabase()
+    // Log the submission (optional - for tracking)
+    console.log(`Whitelist submission from user ${username} (FID: ${fid})`)
 
-    // Check if user already submitted
-    const existing = await db.collection('whitelist_entries').findOne({ fid })
-    if (existing) {
-      return NextResponse.json(
-        { success: false, error: 'You have already submitted an entry' },
-        { status: 400 }
-      )
-    }
-
-    // Insert whitelist entry
-    const entry = {
-      fid,
-      username,
-      pfpUrl,
-      tasks,
-      timestamp,
-      createdAt: new Date(),
-    }
-
-    await db.collection('whitelist_entries').insertOne(entry)
-
+    // Return success without storing in database
     return NextResponse.json({
       success: true,
       message: 'Whitelist entry submitted successfully',
@@ -60,19 +40,11 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { db } = await connectToDatabase()
-
-    // Get all whitelist entries
-    const entries = await db
-      .collection('whitelist_entries')
-      .find({})
-      .sort({ createdAt: -1 })
-      .toArray()
-
+    // Return empty array since we're not storing in database
     return NextResponse.json({
       success: true,
-      count: entries.length,
-      data: entries,
+      count: 0,
+      data: [],
     })
   } catch (error) {
     console.error('Error fetching whitelist entries:', error)

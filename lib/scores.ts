@@ -56,7 +56,7 @@ export async function getUserBestScore(fid: number): Promise<GameScore | null> {
     const bestScore = await GameScore.findOne({ fid })
       .sort({ score: -1 })
       .lean()
-      .exec();
+      .exec() as any;
 
     if (!bestScore) {
       return null;
@@ -88,7 +88,7 @@ export async function getUserScores(
       .sort({ score: -1, timestamp: -1 })
       .limit(limit)
       .lean()
-      .exec();
+      .exec() as any[];
 
     return scores.map((score) => ({
       walletAddress: score.walletAddress,
@@ -174,7 +174,7 @@ export async function getTotalGamesPlayed(): Promise<number> {
 export async function getUserTotalScore(fid: number): Promise<number> {
   try {
     await connectDB();
-    const userScore = await GameScore.findOne({ fid }).lean().exec();
+    const userScore = await GameScore.findOne({ fid }).lean().exec() as any;
     return userScore?.score || 0;
   } catch (error) {
     console.error('Error getting user total score:', error);
