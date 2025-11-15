@@ -1,40 +1,41 @@
 'use client'
 
 import { Demo } from '@/components/Home'
+import { WalletConnectButton } from '@/components/WalletConnectButton'
 import { useFrame } from '@/components/farcaster-provider'
-import { SafeAreaContainer } from '@/components/safe-area-container'
-import Navbar from '../Home/Navbar'
+import Link from 'next/link'
 
 export default function Home() {
-  const { context, isLoading, isSDKLoaded } = useFrame()
+  const { isLoading, isSDKLoaded } = useFrame()
 
   if (isLoading) {
     return (
-      <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-        <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8">
-          <h1 className="text-3xl font-bold text-center">Loading...</h1>
-        </div>
-      </SafeAreaContainer>
+      <div className="loading-screen">
+        <h1>Loading...</h1>
+      </div>
     )
   }
 
   if (!isSDKLoaded) {
     return (
-      <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-        <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8">
-          <h1 className="text-3xl font-bold text-center">
-            No farcaster SDK found, please use this miniapp in the farcaster app
-          </h1>
-        </div>
-      </SafeAreaContainer>
+      <div className="loading-screen">
+        <h1 style={{ fontSize: '16px', textAlign: 'center', padding: '20px' }}>
+          No Farcaster SDK found
+        </h1>
+        <p style={{ fontSize: '12px', textAlign: 'center', maxWidth: '80%' }}>
+          Please use this miniapp in the Farcaster app
+        </p>
+      </div>
     )
   }
 
   return (
-    <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-      <h1 className="text-3xl font-bold text-center">Harsh</h1>
-      <Navbar />
+    <div className="game-container">
+      <WalletConnectButton />
+      <Link href="/score" className="leaderboard-link-btn">
+        🏆 Leaderboard
+      </Link>
       <Demo />
-    </SafeAreaContainer>
+    </div>
   )
 }

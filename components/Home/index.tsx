@@ -1,22 +1,35 @@
 'use client'
 
-import { FarcasterActions } from '@/components/Home/FarcasterActions'
-import { User } from '@/components/Home/User'
-import { WalletActions } from '@/components/Home/WalletActions'
-import { NotificationActions } from './NotificationActions'
+import Script from "next/script";
+import dynamic from "next/dynamic";
+import { useFrame } from '@/components/farcaster-provider'
+import { useAccount } from 'wagmi'
+
+const GameCanvas = dynamic(() => import("@/components/GameCanvasRefactored"), { ssr: false });
 
 export function Demo() {
+  const { context } = useFrame()
+  const { address } = useAccount()
+
+  const userContext = context?.user
+    ? {
+        fid: context.user.fid,
+        pfpUrl: context.user.pfpUrl || null,
+        displayName: context.user.displayName || null,
+        username: context.user.username || null,
+      }
+    : undefined
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8">
-      <h1 className="text-3xl font-bold text-center">
-        Base Farcaster MiniApp Template
-      </h1>
-      <div className="w-full max-w-4xl space-y-6">
-        <User />
-        <FarcasterActions />
-        <NotificationActions />
-        <WalletActions />
-      </div>
-    </div>
+    <>
+      <Script
+        src="https://cdn.jsdelivr.net/npm/@farcade/game-sdk@0.2.1/dist/index.min.js"
+        strategy="afterInteractive"
+      />
+      <GameCanvas 
+        userContext={userContext}
+        walletAddress={address || null}
+      />
+    </>
   )
 }

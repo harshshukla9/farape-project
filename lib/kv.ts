@@ -30,3 +30,5 @@ export async function deleteUserNotificationDetails(
 ): Promise<void> {
   await redis.del(getUserNotificationDetailsKey(fid));
 }
+
+// Score storage functions have been moved to lib/scores.ts (using MongoDB)

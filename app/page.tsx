@@ -6,23 +6,23 @@ const frame = {
   version: 'next',
   imageUrl: `${APP_URL}/images/base.png`,
   button: {
-    title: 'Launch Template',
+    title: 'Play Elton\'s Base Climb',
     action: {
       type: 'launch_frame',
-      name: 'Base Farcaster MiniApp Template',
+      name: 'Elton\'s Base Climb',
       url: APP_URL,
       splashImageUrl: `${APP_URL}/images/splash.png`,
-      splashBackgroundColor: '#f7f7f7',
+      splashBackgroundColor: '#0052ff',
     },
   },
 }
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Base Farcaster MiniApp Template',
+    title: 'Elton\'s Base Climb - Farcaster Game',
     openGraph: {
-      title: 'Base Farcaster MiniApp Template',
-      description: 'A template for building mini-apps on Farcaster and Base',
+      title: 'Elton\'s Base Climb',
+      description: 'Help Elton climb the Base tree! Avoid branches and collect Base tokens.',
     },
     other: {
       'fc:frame': JSON.stringify(frame),

@@ -1,14 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
 import { Providers } from '@/components/providers'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
-  title: 'Base Farcaster MiniApp Template',
-  description: 'A template for building mini-apps on Farcaster and Base',
+  title: 'Elton\'s Base Climb - Farcaster Game',
+  description: 'Help Elton the monkey climb the Base tree! Avoid branches and collect Base tokens in this fast-paced arcade game.',
 }
 
 export default function RootLayout({
@@ -18,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body style={{ margin: 0, padding: 0 }}>
         <Providers>{children}</Providers>
       </body>
     </html>
