@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 
 const frame = {
   version: 'next',
-  imageUrl: `${APP_URL}/images/base.png`,
+  imageUrl: `${APP_URL}/images/icon.png`,
   button: {
     title: 'Play Ape Run',
     action: {
