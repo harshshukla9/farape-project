@@ -19,7 +19,7 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
   const [finalDistance, setFinalDistance] = useState(0)
   const gameStateRef = useRef<any>(null)
   const scoreSavedRef = useRef(false)
-  const { isSDKLoaded, context } = useFrame()
+  const { isSDKLoaded, context, actions } = useFrame()
   const { address } = useAccount()
   const { hasNFT } = useAlchemyNFTs()
 
@@ -997,13 +997,22 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
     }
   }
 
+  const handleShareCast = () => {
+    if (actions?.composeCast) {
+      actions.composeCast({
+        text: `I just scored ${finalScore} bananas on Ape Run! 🍌\n\nPlay now to be part of this bigger ecosystem and climb to the top of the leaderboard! 🏆`,
+        embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/ape-run'],
+      })
+    }
+  }
+
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* Tournament Indicator */}
       {tournamentType !== 'none' && (
         <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg border-2 border-yellow-400 shadow-lg">
           <p className="text-xs font-bold" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-            {tournamentType === 'public' ? '🌍 Public Tournament' : '🦍 NFT Tournament'}
+            {tournamentType === 'public' ? 'Public Tournament' : '🦍 NFT Tournament'}
           </p>
         </div>
       )}
@@ -1064,7 +1073,7 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
                   : 'bg-purple-600/20 border-purple-400'
               }`}>
                 <p className="text-white font-bold text-sm">
-                  {tournamentType === 'public' ? '🌍 Public Tournament Score' : '🦍 NFT Tournament Score'}
+                  {tournamentType === 'public' ? 'Public Tournament Score' : '🦍 NFT Tournament Score'}
                 </p>
                 <p className="text-gray-300 text-xs mt-1">
                   Your score has been saved to the leaderboard!
@@ -1111,6 +1120,14 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
                 Restart
+              </button>
+              
+              <button
+                onClick={handleShareCast}
+                className="w-full px-8 py-4 text-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-4 border-black rounded-[10px] cursor-pointer uppercase transition-all duration-100 active:translate-y-[2px] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_0_#000000,0_10px_15px_rgba(147,51,234,0.4)]"
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+              >
+                Share Cast
               </button>
               
               {onBackToMenu && (

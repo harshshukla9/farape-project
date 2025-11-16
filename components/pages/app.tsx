@@ -52,7 +52,7 @@ export default function ApeRunApp() {
         <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold text-center mb-4 text-yellow-300" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-              🦍 Ape Run 🦍
+              Ape Run
             </h1>
             <p className="text-lg text-yellow-200">Loading Game...</p>
           </div>
@@ -80,7 +80,7 @@ export default function ApeRunApp() {
         <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
           <div className="text-center space-y-6">
             <h1 className="text-4xl font-bold text-yellow-300 mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-              🦍 Ape Run 🦍
+              Ape Run
             </h1>
             <p className="text-xl text-yellow-200" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px', lineHeight: '1.8' }}>
               Climb the tree!<br/>
@@ -105,6 +105,10 @@ export default function ApeRunApp() {
     setCurrentPage(page as AppPage)
   }
 
+  const handleNavigateToTournament = () => {
+    setCurrentPage('tournament')
+  }
+
   const handleStartGame = (tournamentType: TournamentType = 'none') => {
     setActiveTournament(tournamentType)
     setCurrentPage('game')
@@ -123,7 +127,7 @@ export default function ApeRunApp() {
   const renderPage = () => {
     switch (currentPage) {
       case 'main-menu':
-        return <MainMenu onStartGame={handleStartGame} />
+        return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} />
       case 'game':
         return <ApeRunGame onBackToMenu={handleBackToMainMenu} tournamentType={activeTournament} />
       case 'buy-nft':
@@ -139,7 +143,7 @@ export default function ApeRunApp() {
       case 'leaderboard':
         return <LeaderboardPage onBack={handleBackToMainMenu} />
       default:
-        return <MainMenu onStartGame={handleStartGame} />
+        return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} />
     }
   }
 

@@ -19,13 +19,15 @@ export async function GET(request: NextRequest) {
     return Response.json({
       success: true,
       tournamentType: "nft",
-      prizePool: "$200",
+      prizePool: "$50",
       prizes: {
-        "1st": "$80",
-        "2nd": "$50",
-        "3rd": "$30",
-        "4th": "$20",
-        "5th-10th": "$10 each"
+        "1st": "$20",
+        "2nd": "$12",
+        "3rd": "$8",
+        "4th": "$5",
+        "5th": "$3",
+        "6th": "$1",
+        "7th": "$1"
       },
       endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
       data: leaderboard,

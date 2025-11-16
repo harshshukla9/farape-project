@@ -17,12 +17,13 @@ export async function GET(request: NextRequest) {
     return Response.json({
       success: true,
       tournamentType: "public",
-      prizePool: "$50",
+      prizePool: "$20",
       prizes: {
-        "1st": "$20",
-        "2nd": "$15",
-        "3rd": "$10",
-        "4th-10th": "$5 each"
+        "1st": "$8",
+        "2nd": "$5",
+        "3rd": "$4",
+        "4th": "$2",
+        "5th": "$1"
       },
       endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
       data: leaderboard,

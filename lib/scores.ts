@@ -68,6 +68,10 @@ export async function saveGameScore(scoreData: GameScore): Promise<void> {
     if (!scoreData.username) {
       updateObject.$setOnInsert.username = null;
     }
+    // Remove hasNFT from $setOnInsert if it's being set in $set to avoid conflict
+    if (typeof scoreData.hasNFT === 'boolean') {
+      delete updateObject.$setOnInsert.hasNFT;
+    }
 
     await GameScore.findOneAndUpdate(
       { fid: scoreData.fid },
@@ -423,7 +427,7 @@ export async function updateUserNFTStatus(fid: number, hasNFT: boolean): Promise
     console.log('Updating NFT status - FID:', fid, 'hasNFT:', hasNFT);
     
     // First check if user exists
-    const existingUser = await GameScore.findOne({ fid }).lean().exec();
+    const existingUser = await GameScore.findOne({ fid }).lean().exec() as any;
     console.log('Existing user before update:', existingUser ? {
       fid: existingUser.fid,
       hasNFT: existingUser.hasNFT,

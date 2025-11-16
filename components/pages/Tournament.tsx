@@ -35,9 +35,44 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
   const [entering, setEntering] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
   const [txStatus, setTxStatus] = useState<string>('')
+  const [timeRemaining, setTimeRemaining] = useState<string>('')
 
   const fid = context?.user?.fid
   const username = context?.user?.username
+
+  // Tournament end date: November 17, 2025 + 7 days = November 24, 2025 00:00:00 UTC
+  const TOURNAMENT_END_DATE = new Date('2025-11-24T00:00:00Z').getTime()
+
+  // Update countdown timer
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = Date.now()
+      const difference = TOURNAMENT_END_DATE - now
+
+      if (difference <= 0) {
+        setTimeRemaining('Tournament ended')
+        return
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000)
+
+      if (days > 0) {
+        setTimeRemaining(`${days}d ${hours}h ${minutes}m`)
+      } else if (hours > 0) {
+        setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`)
+      } else {
+        setTimeRemaining(`${minutes}m ${seconds}s`)
+      }
+    }
+
+    updateTimer()
+    const interval = setInterval(updateTimer, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const fetchTournamentData = async () => {
     setLoading(true)
@@ -173,18 +208,22 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
   // Function to get prize for rank
   const getPrizeForRank = (rank: number): string => {
     if (selectedTournament === 'public') {
-      if (rank === 1) return '$20'
-      if (rank === 2) return '$15'
-      if (rank === 3) return '$10'
-      if (rank >= 4 && rank <= 10) return '$5'
+      // Public Tournament: $20 total
+      if (rank === 1) return '$8'
+      if (rank === 2) return '$5'
+      if (rank === 3) return '$4'
+      if (rank === 4) return '$2'
+      if (rank === 5) return '$1'
       return '-'
     } else {
-      // NFT tournament
-      if (rank === 1) return '$80'
-      if (rank === 2) return '$50'
-      if (rank === 3) return '$30'
-      if (rank === 4) return '$20'
-      if (rank >= 5 && rank <= 10) return '$10'
+      // NFT Tournament: $50 total
+      if (rank === 1) return '$20'
+      if (rank === 2) return '$12'
+      if (rank === 3) return '$8'
+      if (rank === 4) return '$5'
+      if (rank === 5) return '$3'
+      if (rank === 6) return '$1'
+      if (rank === 7) return '$1'
       return '-'
     }
   }
@@ -214,8 +253,8 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
             style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
           >
             <div>
-              <div>🌍 Public</div>
-              <div className="text-xs mt-1 opacity-80">$50 Prize</div>
+              <div>Public</div>
+              <div className="text-xs mt-1 opacity-80">$20 Prize</div>
             </div>
           </button>
 
@@ -232,48 +271,61 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
             style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
           >
             <div>
-              <div>🦍 NFT Holders</div>
-              <div className="text-xs mt-1 opacity-80">$200 Prize</div>
+              <div> NFT Holders</div>
+              <div className="text-xs mt-1 opacity-80">$50 Prize</div>
             </div>
           </button>
         </div>
         
-        <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-6">
-          <div className="space-y-4">
+        <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-4">
+          <div className="space-y-3">
             {/* Prize Pool Banner */}
-            <div className={`border-4 rounded-lg p-5 ${
+            <div className={`border-3 rounded-lg p-4 ${
               selectedTournament === 'public' 
                 ? 'bg-gradient-to-r from-yellow-600 to-orange-600 border-yellow-400'
                 : 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400'
             }`}>
-              <h2 
-                className="text-white mb-2 font-bold"
-                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '20px' }}
-              >
-                {tournamentData?.prizePool || '$50'} Prize Pool
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex-1">
+                  <h2 
+                    className="text-white font-bold"
+                    style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '18px' }}
+                  >
+                    {tournamentData?.prizePool || (selectedTournament === 'public' ? '$20' : '$50')} Prize
               </h2>
-              <p className="text-white text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px', lineHeight: '1.6' }}>
-                {selectedTournament === 'public' 
-                  ? 'Anyone can play • 7 days left'
-                  : 'NFT holders only • 7 days left'}
-              </p>
+                  <p className="text-white/90 text-xs mt-0.5" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}>
+                    {selectedTournament === 'public' ? 'Anyone can play' : 'NFT holders only'}
+                  </p>
+                </div>
+                <div className="bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2 border-2 border-white/20">
+                  <p className="text-white/70 text-xs mb-0.5" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px', textAlign: 'center' }}>
+                    Ends in
+                  </p>
+                  <p 
+                    className="text-white font-bold whitespace-nowrap"
+                    style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px', textAlign: 'center', letterSpacing: '0.5px' }}
+                  >
+                    {timeRemaining || '...'}
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Prize Distribution */}
-            <div className="bg-purple-800/50 border-2 border-yellow-400 rounded-lg p-4">
+            <div className="bg-purple-800/50 border-2 border-yellow-400 rounded-lg p-3">
               <h3 
-                className="text-yellow-300 mb-3 font-bold"
-                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+                className="text-yellow-300 mb-2 font-bold"
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '13px' }}
               >
                 Prize Distribution
               </h3>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-1.5">
                 {tournamentData?.prizes && Object.entries(tournamentData.prizes).map(([place, prize]) => (
-                  <div key={place} className="bg-black/40 rounded p-2 border border-yellow-500/30">
-                    <p className="text-yellow-400 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}>
+                  <div key={place} className="bg-black/40 rounded px-2 py-1.5 border border-yellow-500/30">
+                    <p className="text-yellow-400" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}>
                       {place}
                     </p>
-                    <p className="text-white font-bold text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}>
+                    <p className="text-white font-bold" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '12px' }}>
                       {prize}
                     </p>
                   </div>
@@ -282,10 +334,10 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
             </div>
 
             {/* Leaderboard */}
-            <div className="bg-purple-800/50 border-2 border-yellow-400 rounded-lg p-4">
+            <div className="bg-purple-800/50 border-2 border-yellow-400 rounded-lg p-3">
               <h3 
-                className="text-yellow-300 mb-3 font-bold"
-                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+                className="text-yellow-300 mb-2 font-bold"
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '13px' }}
               >
                 Top Players
               </h3>
@@ -302,7 +354,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                       </p>
                     </div>
                   )}
-                  <div className="space-y-2 max-h-[250px] overflow-y-auto">
+                  <div className="space-y-1.5 max-h-[250px] overflow-y-auto">
                     {tournamentData.data.slice(0, 10).map((entry, index) => {
                       const rank = index + 1
                       const prize = getPrizeForRank(rank)
@@ -310,18 +362,18 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                       return (
                         <div 
                           key={index}
-                          className={`flex items-center justify-between p-2.5 rounded border-2 ${
+                          className={`flex items-center justify-between p-2 rounded border ${
                             rank <= 3 
                               ? 'bg-yellow-900/20 border-yellow-500/50' 
                               : 'bg-gray-800/50 border-gray-700'
                           }`}
                         >
-                          <div className="flex items-center gap-3 flex-1">
+                          <div className="flex items-center gap-2 flex-1">
                             <span 
-                              className={`font-bold min-w-[35px] text-center ${
+                              className={`font-bold min-w-[28px] text-center ${
                                 rank === 1 ? 'text-2xl' : rank === 2 ? 'text-xl' : rank === 3 ? 'text-lg' : 'text-yellow-300'
                               }`}
-                              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: rank <= 3 ? '14px' : '11px' }}
+                              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: rank <= 3 ? '13px' : '10px' }}
                             >
                               {rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`}
                             </span>
@@ -329,12 +381,12 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                               <img 
                                 src={entry.pfpUrl} 
                                 alt={entry.displayName || entry.username || `FID: ${entry.fid}`}
-                                className="w-8 h-8 rounded-full border-2 border-yellow-500"
+                                className="w-7 h-7 rounded-full border border-yellow-500"
                               />
                             )}
                             <div className="flex-1 min-w-0">
                               <p 
-                                className="text-white truncate text-sm"
+                                className="text-white truncate"
                                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}
                               >
                                 {entry.displayName || entry.username || `FID: ${entry.fid}`}
@@ -342,7 +394,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                             </div>
                           </div>
                           
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             <div className="text-right">
                               <p 
                                 className="text-green-400 font-bold"
@@ -350,23 +402,17 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                               >
                                 {entry.score}
                               </p>
-                              <p 
-                                className="text-gray-400 text-xs"
-                                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '8px' }}
-                              >
-                                pts
-                              </p>
                             </div>
                             
                             {prize !== '-' && (
-                              <div className={`px-2 py-1 rounded ${
+                              <div className={`px-2 py-0.5 rounded ${
                                 rank <= 3 
                                   ? 'bg-yellow-500 text-black' 
                                   : 'bg-green-600/30 text-green-300 border border-green-500/50'
                               }`}>
                                 <p 
                                   className="font-bold whitespace-nowrap"
-                                  style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}
+                                  style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
                                 >
                                   {prize}
                                 </p>
@@ -399,7 +445,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                       </p>
                       <p className="text-gray-400 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px', lineHeight: '1.6' }}>
                         No NFT holders have entered yet!<br/>
-                        Be the first NFT holder to compete for the $200 prize pool.
+                        Be the first NFT holder to compete for the $50 prize pool.
                       </p>
                       <div className="mt-3 p-2 bg-purple-600/20 border border-purple-500 rounded">
                         <p className="text-purple-200 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}>
@@ -428,33 +474,33 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
             </div>
 
             {/* Entry Section */}
-            <div className="border-t-2 border-yellow-500/30 pt-4">
+            <div className="border-t-2 border-yellow-500/30 pt-3">
               {selectedTournament === 'nft' && !isConnected && (
-                <div className="space-y-3">
+              <div className="space-y-3">
                   <p className="text-white text-sm mb-3" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.6' }}>
                     Connect wallet to check NFT eligibility
-                  </p>
-                  <WalletConnectButton />
-                </div>
+                </p>
+                <WalletConnectButton />
+              </div>
               )}
 
               {selectedTournament === 'nft' && isConnected && isLoadingNFT && (
-                <div className="text-center py-4">
+              <div className="text-center py-4">
                   <p className="text-yellow-300 mb-2" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '12px' }}>
-                    Checking NFT status...
-                  </p>
-                </div>
+                  Checking NFT status...
+                </p>
+              </div>
               )}
 
               {selectedTournament === 'nft' && isConnected && !isLoadingNFT && !hasNFT && (
-                <div className="space-y-3">
-                  <button 
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
+              <div className="space-y-3">
+                <button 
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
                     style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
                     onClick={handleBuyNFT}
-                  >
-                    Buy NFT to Enter
-                  </button>
+                >
+                  Buy NFT to Enter
+                </button>
                   <p className="text-red-300 text-xs text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px', lineHeight: '1.6' }}>
                     You need to own an Ape NFT to participate in this tournament
                   </p>
@@ -488,10 +534,10 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                         <div className="bg-blue-600/20 border-2 border-blue-400 rounded-lg p-3">
                           <p className="text-blue-300 text-sm text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}>
                             {txStatus}
-                          </p>
-                        </div>
-                      )}
-                      
+                </p>
+              </div>
+            )}
+
                       {!isConnected && (
                         <div className="bg-orange-600/20 border-2 border-orange-400 rounded-lg p-3">
                           <p className="text-orange-300 text-sm text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}>

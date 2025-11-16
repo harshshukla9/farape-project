@@ -9,7 +9,7 @@ const frame = {
     title: 'Play Ape Run',
     action: {
       type: 'launch_frame',
-      name: '🦍 Ape Run',
+      name: 'Ape Run',
       url: APP_URL,
       splashImageUrl: `${APP_URL}/images/splash.png`,
       splashBackgroundColor: '#667eea',
