@@ -52,8 +52,6 @@ export async function saveGameScore(scoreData: GameScore): Promise<void> {
       },
       $setOnInsert: {
         fid: scoreData.fid,
-        publicTournamentScore: 0,
-        nftTournamentScore: 0,
         hasNFT: false,
       },
     };
