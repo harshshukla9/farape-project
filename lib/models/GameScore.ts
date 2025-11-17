@@ -8,6 +8,9 @@ export interface IGameScore {
   username: string | null;
   score: number;
   timestamp: number;
+  hasNFT?: boolean;
+  publicTournamentScore?: number;
+  nftTournamentScore?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -45,6 +48,21 @@ const GameScoreSchema = new Schema<IGameScore>(
     timestamp: {
       type: Number,
       required: true,
+      index: true,
+    },
+    hasNFT: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    publicTournamentScore: {
+      type: Number,
+      default: 0,
+      index: true,
+    },
+    nftTournamentScore: {
+      type: Number,
+      default: 0,
       index: true,
     },
   },

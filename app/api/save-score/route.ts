@@ -9,6 +9,8 @@ const saveScoreSchema = z.object({
   displayName: z.union([z.string(), z.null()]),
   username: z.union([z.string(), z.null()]),
   score: z.number().int().nonnegative(),
+  hasNFT: z.boolean().optional(),
+  tournamentType: z.enum(["public", "nft", "none"]).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -24,6 +26,9 @@ export async function POST(request: NextRequest) {
       username: validatedData.username,
       score: validatedData.score,
       timestamp: Date.now(),
+      hasNFT: validatedData.hasNFT || false,
+      publicTournamentScore: validatedData.tournamentType === "public" ? validatedData.score : 0,
+      nftTournamentScore: validatedData.tournamentType === "nft" ? validatedData.score : 0,
     };
 
     await saveGameScore(gameScore);

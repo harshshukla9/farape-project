@@ -3,12 +3,14 @@
 import { useFrame } from '@/components/farcaster-provider'
 import { useAccount } from 'wagmi'
 import { useEffect, useRef, useState } from 'react'
+import { useAlchemyNFTs } from '@/app/hooks/useAlchemyNFTs'
 
 interface ApeRunGameProps {
   onBackToMenu?: () => void
+  tournamentType?: 'public' | 'nft' | 'none'
 }
 
-export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
+export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: ApeRunGameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [showStartButton, setShowStartButton] = useState(true)
   const [showHowToPlay, setShowHowToPlay] = useState(true)
@@ -17,8 +19,9 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
   const [finalDistance, setFinalDistance] = useState(0)
   const gameStateRef = useRef<any>(null)
   const scoreSavedRef = useRef(false)
-  const { isSDKLoaded, context } = useFrame()
+  const { isSDKLoaded, context, actions } = useFrame()
   const { address } = useAccount()
+  const { hasNFT } = useAlchemyNFTs()
 
   useEffect(() => {
     if (!canvasRef.current || !isSDKLoaded) return
@@ -78,7 +81,11 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(scoreData),
+          body: JSON.stringify({
+            ...scoreData,
+            tournamentType: tournamentType,
+            hasNFT: hasNFT || false,
+          }),
         })
 
         if (!response.ok) {
@@ -87,6 +94,11 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
 
         const result = await response.json()
         console.log('Score saved successfully:', result)
+        
+        // Show tournament success message if in tournament mode
+        if (tournamentType !== 'none') {
+          console.log(`Score saved to ${tournamentType} tournament!`)
+        }
       } catch (error) {
         console.error('Error saving score:', error)
       }
@@ -985,8 +997,26 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
     }
   }
 
+  const handleShareCast = () => {
+    if (actions?.composeCast) {
+      actions.composeCast({
+        text: `I just scored ${finalScore} bananas on Ape Run! 🍌\n\nPlay now to be part of this bigger ecosystem and climb to the top of the leaderboard! 🏆`,
+        embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/ape-run'],
+      })
+    }
+  }
+
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+      {/* Tournament Indicator */}
+      {tournamentType !== 'none' && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg border-2 border-yellow-400 shadow-lg">
+          <p className="text-xs font-bold" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+            {tournamentType === 'public' ? 'Public Tournament' : '🦍 NFT Tournament'}
+          </p>
+        </div>
+      )}
+      
       <canvas
         ref={canvasRef}
         id="gameCanvas"
@@ -1035,6 +1065,22 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
               </h2>
             </div>
 
+            {/* Tournament Badge */}
+            {tournamentType !== 'none' && (
+              <div className={`mb-4 p-3 rounded-lg border-2 text-center ${
+                tournamentType === 'public' 
+                  ? 'bg-yellow-600/20 border-yellow-400' 
+                  : 'bg-purple-600/20 border-purple-400'
+              }`}>
+                <p className="text-white font-bold text-sm">
+                  {tournamentType === 'public' ? 'Public Tournament Score' : '🦍 NFT Tournament Score'}
+                </p>
+                <p className="text-gray-300 text-xs mt-1">
+                  Your score has been saved to the leaderboard!
+                </p>
+              </div>
+            )}
+
             {/* Stats Container */}
             <div className="bg-black/50 border-2 border-yellow-400 rounded-lg p-6 mb-6 space-y-4">
               {/* Score */}
@@ -1074,6 +1120,14 @@ export default function ApeRunGame({ onBackToMenu }: ApeRunGameProps) {
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
                 Restart
+              </button>
+              
+              <button
+                onClick={handleShareCast}
+                className="w-full px-8 py-4 text-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-4 border-black rounded-[10px] cursor-pointer uppercase transition-all duration-100 active:translate-y-[2px] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_0_#000000,0_10px_15px_rgba(147,51,234,0.4)]"
+                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+              >
+                Share Cast
               </button>
               
               {onBackToMenu && (

@@ -8,17 +8,19 @@ import DailyReward from '@/components/pages/DailyReward'
 import YourNFT from '@/components/pages/YourNFT'
 import Tournament from '@/components/pages/Tournament'
 import BurnToEarn from '@/components/pages/BurnToEarn'
-import ComingSoon from '@/components/pages/ComingSoon'
 import { useFrame } from '@/components/farcaster-provider'
 import { SafeAreaContainer } from '@/components/safe-area-container'
 import { useEffect, useState } from 'react'
+import type { GameScore } from '@/lib/scores'
 
 type AppPage = 'main-menu' | 'game' | 'buy-nft' | 'daily-reward' | 'your-nft' | 'tournament' | 'burn-to-earn' | 'leaderboard'
+type TournamentType = 'public' | 'nft' | 'none'
 
 export default function ApeRunApp() {
   const { context, isLoading, isSDKLoaded, actions } = useFrame()
   const [progress, setProgress] = useState(0)
   const [currentPage, setCurrentPage] = useState<AppPage>('main-menu')
+  const [activeTournament, setActiveTournament] = useState<TournamentType>('none')
 
   useEffect(() => {
     if (isLoading) {
@@ -50,7 +52,7 @@ export default function ApeRunApp() {
         <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold text-center mb-4 text-yellow-300" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-              🦍 Ape Run 🦍
+              Ape Run
             </h1>
             <p className="text-lg text-yellow-200">Loading Game...</p>
           </div>
@@ -78,7 +80,7 @@ export default function ApeRunApp() {
         <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
           <div className="text-center space-y-6">
             <h1 className="text-4xl font-bold text-yellow-300 mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-              🦍 Ape Run 🦍
+              Ape Run
             </h1>
             <p className="text-xl text-yellow-200" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px', lineHeight: '1.8' }}>
               Climb the tree!<br/>
@@ -103,34 +105,45 @@ export default function ApeRunApp() {
     setCurrentPage(page as AppPage)
   }
 
-  const handleStartGame = () => {
+  const handleNavigateToTournament = () => {
+    setCurrentPage('tournament')
+  }
+
+  const handleStartGame = (tournamentType: TournamentType = 'none') => {
+    setActiveTournament(tournamentType)
     setCurrentPage('game')
   }
 
   const handleBackToMainMenu = () => {
+    setActiveTournament('none')
     setCurrentPage('main-menu')
+  }
+
+  const handleStartTournament = (tournamentType: TournamentType) => {
+    setActiveTournament(tournamentType)
+    setCurrentPage('game')
   }
 
   const renderPage = () => {
     switch (currentPage) {
       case 'main-menu':
-        return <MainMenu onStartGame={handleStartGame} />
+        return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} />
       case 'game':
-        return <ApeRunGame onBackToMenu={handleBackToMainMenu} />
+        return <ApeRunGame onBackToMenu={handleBackToMainMenu} tournamentType={activeTournament} />
       case 'buy-nft':
         return <BuyNFT onBack={handleBackToMainMenu} />
       case 'daily-reward':
-        return <ComingSoon title="Daily Reward" onBack={handleBackToMainMenu} />
+        return <DailyReward onBack={handleBackToMainMenu} />
       case 'your-nft':
         return <YourNFT onBack={handleBackToMainMenu} />
       case 'tournament':
-        return <ComingSoon title="Tournament" onBack={handleBackToMainMenu} />
+        return <Tournament onBack={handleBackToMainMenu} onStartTournament={handleStartTournament} />
       case 'burn-to-earn':
-        return <ComingSoon title="Burn to Earn" onBack={handleBackToMainMenu} />
+        return <BurnToEarn onBack={handleBackToMainMenu} />
       case 'leaderboard':
-        return <ComingSoon title="Leaderboard" onBack={handleBackToMainMenu} />
+        return <LeaderboardPage onBack={handleBackToMainMenu} />
       default:
-        return <MainMenu onStartGame={handleStartGame} />
+        return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} />
     }
   }
 
