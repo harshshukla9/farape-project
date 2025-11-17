@@ -28,7 +28,9 @@ export async function GET() {
       requiredChains: ["eip155:42161"],
     },
     "baseBuilder": {
-      "allowedAddresses": ["0xE7503b8d192DcE2895327878ECE5a0a401821a66"]
+      "allowedAddresses": ["0xE7503b8d192DcE2895327878ECE5a0a401821a66"],
+      "ownerAddress": "0x721f07F9E4b5b2D522D0D657cCEebfb64487d8DC"
+     
     }
   };
 
