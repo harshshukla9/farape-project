@@ -4,24 +4,45 @@ import { useFrame } from '@/components/farcaster-provider'
 import { useAccount } from 'wagmi'
 import { useEffect, useRef, useState } from 'react'
 import { useAlchemyNFTs } from '@/app/hooks/useAlchemyNFTs'
+import { useStartGame } from '@/smartcontracthooks/useStartGame'
+import { WalletConnectButton } from '@/components/WalletConnectButton'
 
 interface ApeRunGameProps {
   onBackToMenu?: () => void
   tournamentType?: 'public' | 'nft' | 'none'
+  skipInitialTransaction?: boolean
 }
 
-export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: ApeRunGameProps) {
+export default function ApeRunGame({ onBackToMenu, tournamentType = 'none', skipInitialTransaction = false }: ApeRunGameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [showStartButton, setShowStartButton] = useState(true)
   const [showHowToPlay, setShowHowToPlay] = useState(true)
   const [showGameOver, setShowGameOver] = useState(false)
   const [finalScore, setFinalScore] = useState(0)
   const [finalDistance, setFinalDistance] = useState(0)
+  const [txStatus, setTxStatus] = useState<string>('')
+  const [isStartingGame, setIsStartingGame] = useState(false)
   const gameStateRef = useRef<any>(null)
   const scoreSavedRef = useRef(false)
   const { isSDKLoaded, context, actions } = useFrame()
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
   const { hasNFT } = useAlchemyNFTs()
+  const { startGame: startGameTransaction, isPending: isTransactionPending } = useStartGame()
+
+  // Auto-start game if coming from tournament entry
+  useEffect(() => {
+    if (skipInitialTransaction && canvasRef.current && isSDKLoaded) {
+      // Wait a bit for the canvas to be ready
+      const timer = setTimeout(() => {
+        // Directly call the game start without transaction
+        if (typeof window !== 'undefined' && (window as any).__startGame) {
+          console.log('Auto-starting game for tournament entry')
+          ;(window as any).__startGame()
+        }
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [skipInitialTransaction, isSDKLoaded])
 
   useEffect(() => {
     if (!canvasRef.current || !isSDKLoaded) return
@@ -945,13 +966,9 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
 
     // Farcade SDK event listeners
     if (typeof window !== 'undefined' && (window as any).FarcadeSDK) {
-      ;(window as any).FarcadeSDK.on('play_again', () => {
-        state.gameOver = false
-        state.gameRunning = false
-        startGame()
-        setTimeout(() => {
-          canvas.focus()
-        }, 100)
+      ;(window as any).FarcadeSDK.on('play_again', async () => {
+        // Trigger the restart which includes transaction
+        handleRestartClick()
       })
 
       ;(window as any).FarcadeSDK.on('toggle_mute', (data: any) => {
@@ -985,15 +1002,106 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
     }
   }, [isSDKLoaded, context, address])
 
-  const handleStartClick = () => {
-    if (typeof window !== 'undefined' && (window as any).__startGame) {
-      ;(window as any).__startGame()
+  const handleStartClick = async () => {
+    // If coming from tournament entry, skip transaction and start directly
+    if (skipInitialTransaction) {
+      console.log('Skipping initial transaction for tournament entry')
+      if (typeof window !== 'undefined' && (window as any).__startGame) {
+        ;(window as any).__startGame()
+      }
+      return
+    }
+
+    // Check wallet connection
+    if (!isConnected || !address) {
+      alert('Please connect your wallet to play!')
+      return
+    }
+
+    setIsStartingGame(true)
+    setTxStatus('Initiating transaction...')
+
+    try {
+      // Call the smart contract transaction
+      console.log('Calling startGame contract...')
+      const contractResult = await startGameTransaction()
+
+      if (!contractResult.success) {
+        throw new Error('Contract transaction failed')
+      }
+
+      console.log('Contract transaction successful:', contractResult.hash)
+      setTxStatus('Transaction confirmed! Starting game...')
+
+      // Start the actual game after successful transaction
+      setTimeout(() => {
+        if (typeof window !== 'undefined' && (window as any).__startGame) {
+          ;(window as any).__startGame()
+        }
+        setTxStatus('')
+        setIsStartingGame(false)
+      }, 1000)
+    } catch (error: any) {
+      console.error('Error starting game:', error)
+      setTxStatus('')
+      setIsStartingGame(false)
+      
+      // Show user-friendly error message
+      if (error.message.includes('User rejected')) {
+        alert('Transaction was rejected. Please approve the transaction to play.')
+      } else if (error.message.includes('Wallet not connected')) {
+        alert('Please connect your wallet first!')
+      } else {
+        alert(`Failed to start game: ${error.message || 'Unknown error'}`)
+      }
     }
   }
 
-  const handleRestartClick = () => {
-    if (typeof window !== 'undefined' && (window as any).__startGame) {
-      ;(window as any).__startGame()
+  const handleRestartClick = async () => {
+    // Check wallet connection
+    if (!isConnected || !address) {
+      alert('Please connect your wallet to play!')
+      return
+    }
+
+    setIsStartingGame(true)
+    setShowGameOver(false)
+    setTxStatus('Initiating transaction...')
+
+    try {
+      // Call the smart contract transaction
+      console.log('Calling startGame contract for restart...')
+      const contractResult = await startGameTransaction()
+
+      if (!contractResult.success) {
+        throw new Error('Contract transaction failed')
+      }
+
+      console.log('Contract transaction successful:', contractResult.hash)
+      setTxStatus('Transaction confirmed! Restarting game...')
+
+      // Restart the actual game after successful transaction
+      setTimeout(() => {
+        if (typeof window !== 'undefined' && (window as any).__startGame) {
+          ;(window as any).__startGame()
+        }
+        setTxStatus('')
+        setIsStartingGame(false)
+      }, 1000)
+    } catch (error: any) {
+      console.error('Error restarting game:', error)
+      setTxStatus('')
+      setIsStartingGame(false)
+      setShowGameOver(true) // Show game over again if transaction fails
+      
+      // Show user-friendly error message
+      if (error.message.includes('User rejected')) {
+        alert('Transaction was rejected. Please approve the transaction to play again.')
+      } else if (error.message.includes('Wallet not connected')) {
+        alert('Please connect your wallet first!')
+      } else {
+        alert(`Failed to restart game: ${error.message || 'Unknown error'}`)
+      }
     }
   }
 
@@ -1024,14 +1132,34 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
         className="max-w-[400px] w-full h-screen block transition-[filter] duration-500"
       />
       {showStartButton && (
-        <button
-          id="startButton"
-          onClick={handleStartClick}
-          className="absolute top-[85%] left-1/2 -translate-x-1/2 -translate-y-1/2 px-10 py-5 text-2xl text-white bg-[#ffcc00] border-4 border-black rounded-[10px] cursor-pointer text-center uppercase transition-all duration-100 hover:bg-[#ffd700] active:-translate-y-[46%] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)]"
-          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
-        >
-          Start
-        </button>
+        <>
+          <button
+            id="startButton"
+            onClick={handleStartClick}
+            disabled={isStartingGame || isTransactionPending}
+            className="absolute top-[85%] left-1/2 -translate-x-1/2 -translate-y-1/2 px-10 py-5 text-2xl text-white bg-[#ffcc00] border-4 border-black rounded-[10px] cursor-pointer text-center uppercase transition-all duration-100 hover:bg-[#ffd700] active:-translate-y-[46%] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)] disabled:bg-gray-500 disabled:cursor-not-allowed"
+            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+          >
+            {isStartingGame || isTransactionPending ? '⏳ Starting...' : 'Start'}
+          </button>
+          
+          {txStatus && (
+            <div className="absolute top-[75%] left-1/2 -translate-x-1/2 bg-blue-600/90 backdrop-blur-sm border-2 border-blue-400 rounded-lg px-4 py-2 max-w-[300px]">
+              <p className="text-white text-sm text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '12px' }}>
+                {txStatus}
+              </p>
+            </div>
+          )}
+
+          {!isConnected && (
+            <div className="absolute top-[70%] left-1/2 -translate-x-1/2 bg-orange-600/90 backdrop-blur-sm border-4 border-orange-400 rounded-lg px-4 py-3 max-w-[320px] w-[90%]">
+              <p className="text-white text-sm text-center mb-3" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '12px' }}>
+                ⚠️ Connect wallet to play
+              </p>
+              <WalletConnectButton />
+            </div>
+          )}
+        </>
       )}
       {showHowToPlay && (
         <div
@@ -1114,12 +1242,30 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none' }: Ap
 
             {/* Buttons */}
             <div className="space-y-3">
+              {txStatus && (
+                <div className="bg-blue-600/20 border-2 border-blue-400 rounded-lg p-3">
+                  <p className="text-blue-300 text-sm text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}>
+                    {txStatus}
+                  </p>
+                </div>
+              )}
+
+              {!isConnected && (
+                <div className="bg-orange-600/20 border-2 border-orange-400 rounded-lg p-3">
+                  <p className="text-orange-300 text-sm text-center mb-3" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}>
+                    ⚠️ Connect wallet to play again
+                  </p>
+                  <WalletConnectButton />
+                </div>
+              )}
+
               <button
                 onClick={handleRestartClick}
-                className="w-full px-8 py-4 text-xl text-black bg-[#ffcc00] hover:bg-[#ffd700] border-4 border-black rounded-[10px] cursor-pointer uppercase transition-all duration-100 active:translate-y-[2px] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_0_#000000,0_10px_15px_rgba(255,204,0,0.4)]"
+                disabled={isStartingGame || isTransactionPending || !isConnected}
+                className="w-full px-8 py-4 text-xl text-black bg-[#ffcc00] hover:bg-[#ffd700] border-4 border-black rounded-[10px] cursor-pointer uppercase transition-all duration-100 active:translate-y-[2px] shadow-[0_6px_0_#000000,0_8px_10px_rgba(0,0,0,0.3)] active:shadow-[0_2px_0_#000000,0_4px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_0_#000000,0_10px_15px_rgba(255,204,0,0.4)] disabled:bg-gray-500 disabled:cursor-not-allowed"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
-                Restart
+                {isStartingGame || isTransactionPending ? '⏳ Processing...' : 'Restart'}
               </button>
               
               <button

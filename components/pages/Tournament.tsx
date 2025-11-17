@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react'
 
 interface TournamentProps {
   onBack: () => void
-  onStartTournament: (type: 'public' | 'nft') => void
+  onStartTournament: (type: 'public' | 'nft', skipTransaction?: boolean) => void
 }
 
 type TournamentType = 'public' | 'nft'
@@ -181,10 +181,10 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
         // Store in localStorage for persistence
         localStorage.setItem(`tournament_entered_${selectedTournament}_${fid}`, 'true')
         setTxStatus('Starting game...')
-        // Start the tournament game after a brief delay
+        // Start the tournament game after a brief delay, skip initial transaction since we already paid
         setTimeout(() => {
           setTxStatus('')
-          onStartTournament(selectedTournament)
+          onStartTournament(selectedTournament, true)
         }, 1000)
       } else {
         throw new Error(data.error || 'Failed to enter tournament')

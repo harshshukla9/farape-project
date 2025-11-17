@@ -21,6 +21,7 @@ export default function ApeRunApp() {
   const [progress, setProgress] = useState(0)
   const [currentPage, setCurrentPage] = useState<AppPage>('main-menu')
   const [activeTournament, setActiveTournament] = useState<TournamentType>('none')
+  const [skipInitialTransaction, setSkipInitialTransaction] = useState(false)
 
   useEffect(() => {
     if (isLoading) {
@@ -111,16 +112,19 @@ export default function ApeRunApp() {
 
   const handleStartGame = (tournamentType: TournamentType = 'none') => {
     setActiveTournament(tournamentType)
+    setSkipInitialTransaction(false)
     setCurrentPage('game')
   }
 
   const handleBackToMainMenu = () => {
     setActiveTournament('none')
+    setSkipInitialTransaction(false)
     setCurrentPage('main-menu')
   }
 
-  const handleStartTournament = (tournamentType: TournamentType) => {
+  const handleStartTournament = (tournamentType: TournamentType, skipTransaction: boolean = false) => {
     setActiveTournament(tournamentType)
+    setSkipInitialTransaction(skipTransaction)
     setCurrentPage('game')
   }
 
@@ -129,7 +133,7 @@ export default function ApeRunApp() {
       case 'main-menu':
         return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} />
       case 'game':
-        return <ApeRunGame onBackToMenu={handleBackToMainMenu} tournamentType={activeTournament} />
+        return <ApeRunGame onBackToMenu={handleBackToMainMenu} tournamentType={activeTournament} skipInitialTransaction={skipInitialTransaction} />
       case 'buy-nft':
         return <BuyNFT onBack={handleBackToMainMenu} />
       case 'daily-reward':
