@@ -55,7 +55,7 @@ handleEnterTournament() {
 }
 ```
 
-### **Game Score Saving (ApeRunGame.tsx):**
+### **Game Score Saving (ApexRunnerGame.tsx):**
 ```typescript
 saveScoreToDatabase({
   ...scoreData,

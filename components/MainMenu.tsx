@@ -21,15 +21,10 @@ export default function MainMenu({ onStartGame, onNavigateToTournament }: MainMe
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
-      <div className="text-center space-y-8 max-w-2xl w-full">
-        {/* Game Title */}
-        <div className="space-y-4">
-          <h1 
-            className="text-6xl font-bold text-yellow-300 drop-shadow-lg"
-            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
-          >
-            Ape Run 
-          </h1>
+                <div className="text-center space-y-2">
+            <h1 className="text-5xl font-bold text-white drop-shadow-lg">
+            Apex Runner 
+            </h1>
           <p 
             className="text-2xl text-yellow-200"
             style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '18px', lineHeight: '1.8' }}
@@ -118,7 +113,5 @@ export default function MainMenu({ onStartGame, onNavigateToTournament }: MainMe
           Use the menu to access features and view leaderboard
         </p>
       </div>
-    </div>
   )
 }
-
