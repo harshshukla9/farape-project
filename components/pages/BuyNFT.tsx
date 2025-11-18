@@ -26,7 +26,7 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
                 className="text-yellow-300 mb-4"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '18px' }}
               >
-                Get Your Farapes NFT
+                Get Your Tickets for the Tournament
               </h3>
               <div className="text-white text-sm mb-6" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px', lineHeight: '1.8' }}>
                 <p className="mb-4">🦍 Unlock special abilities and bonus points!</p>
@@ -37,7 +37,7 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
                 className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
-                Get Farapes
+                Get Tickets
               </button>
             </div>
             
