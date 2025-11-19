@@ -6,10 +6,10 @@ const frame = {
   version: 'next',
   imageUrl: `${APP_URL}/images/icon.png`,
   button: {
-    title: 'Play Ape Run',
+    title: 'Play Apex Runner',
     action: {
       type: 'launch_frame',
-      name: 'Ape Run',
+      name: 'Apex Runner',
       url: APP_URL,
       splashImageUrl: `${APP_URL}/images/splash.png`,
       splashBackgroundColor: '#667eea',
@@ -19,9 +19,9 @@ const frame = {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: '🦍 Ape Run - Farcaster Game',
+    title: 'Apex Runner - Farcaster Game',
     openGraph: {
-      title: '🦍 Ape Run',
+      title: 'Apex Runner',
       description: 'Climb the tree! Dodge the branches! Collect the bananas!',
     },
     other: {

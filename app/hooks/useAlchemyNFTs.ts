@@ -68,7 +68,7 @@ export function useAlchemyNFTs() {
           
           return {
             tokenId: nft.tokenId || 'unknown',
-            name: nft.name || nft.raw?.metadata?.name || `FarApe Ape #${nft.tokenId}`,
+            name: nft.name || nft.raw?.metadata?.name || `Apex Runner NFT #${nft.tokenId}`,
             description: nft.description || nft.raw?.metadata?.description,
             imageUrl: nft.image?.cachedUrl || nft.image?.originalUrl || nft.image?.pngUrl || '',
             cachedImageUrl: nft.image?.cachedUrl,

@@ -86,7 +86,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
               style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
-              Buy NFT
+              Buy Tickets
             </button>
 
             <button
@@ -102,7 +102,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
               style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
-              Your NFT
+              Your Tickets
             </button>
 
             <button
@@ -141,7 +141,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
           {/* Footer spacing */}
           <div className="flex-shrink-0 p-3 pt-2 border-t-2 border-yellow-500/30">
             <p className="text-center text-gray-400" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '8px', lineHeight: '1.2' }}>
-              🦍 Ape Run
+              Apex Runner
             </p>
           </div>
         </div>

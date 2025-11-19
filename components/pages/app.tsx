@@ -1,6 +1,6 @@
 'use client'
 
-import ApeRunGame from '@/components/ApeRunGame'
+import ApexRunnerGame from '@/components/ApexRunnerGame'
 import MainMenu from '@/components/MainMenu'
 import HamburgerMenu from '@/components/HamburgerMenu'
 import BuyNFT from '@/components/pages/BuyNFT'
@@ -16,7 +16,7 @@ import type { GameScore } from '@/lib/scores'
 type AppPage = 'main-menu' | 'game' | 'buy-nft' | 'daily-reward' | 'your-nft' | 'tournament' | 'burn-to-earn' | 'leaderboard'
 type TournamentType = 'public' | 'nft' | 'none'
 
-export default function ApeRunApp() {
+export default function ApexRunnerApp() {
   const { context, isLoading, isSDKLoaded, actions } = useFrame()
   const [progress, setProgress] = useState(0)
   const [currentPage, setCurrentPage] = useState<AppPage>('main-menu')
@@ -53,7 +53,7 @@ export default function ApeRunApp() {
         <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold text-center mb-4 text-yellow-300" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-              Ape Run
+              Apex Runner
             </h1>
             <p className="text-lg text-yellow-200">Loading Game...</p>
           </div>
@@ -80,8 +80,8 @@ export default function ApeRunApp() {
       <SafeAreaContainer insets={context?.client.safeAreaInsets}>
         <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-8 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
           <div className="text-center space-y-6">
-            <h1 className="text-4xl font-bold text-yellow-300 mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-              Ape Run
+                        <h1 className="text-3xl font-bold text-white mb-2">
+              Apex Runner
             </h1>
             <p className="text-xl text-yellow-200" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px', lineHeight: '1.8' }}>
               Climb the tree!<br/>
@@ -133,7 +133,7 @@ export default function ApeRunApp() {
       case 'main-menu':
         return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} />
       case 'game':
-        return <ApeRunGame onBackToMenu={handleBackToMainMenu} tournamentType={activeTournament} skipInitialTransaction={skipInitialTransaction} />
+        return <ApexRunnerGame onBackToMenu={handleBackToMainMenu} tournamentType={activeTournament} skipInitialTransaction={skipInitialTransaction} />
       case 'buy-nft':
         return <BuyNFT onBack={handleBackToMainMenu} />
       case 'daily-reward':

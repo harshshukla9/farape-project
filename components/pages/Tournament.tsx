@@ -688,7 +688,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                     style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
                     onClick={handleBuyNFT}
                 >
-                  Buy NFT to Enter
+                  Buy Tickets to Enter
                 </button>
                   <p className="text-red-300 text-xs text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px', lineHeight: '1.6' }}>
                     You need to own an Ape NFT to participate in this tournament

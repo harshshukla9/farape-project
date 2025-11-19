@@ -7,13 +7,13 @@ import { useAlchemyNFTs } from '@/app/hooks/useAlchemyNFTs'
 import { useStartGame } from '@/smartcontracthooks/useStartGame'
 import { WalletConnectButton } from '@/components/WalletConnectButton'
 
-interface ApeRunGameProps {
+interface ApexRunnerGameProps {
   onBackToMenu?: () => void
   tournamentType?: 'public' | 'nft' | 'none'
   skipInitialTransaction?: boolean
 }
 
-export default function ApeRunGame({ onBackToMenu, tournamentType = 'none', skipInitialTransaction = false }: ApeRunGameProps) {
+export default function ApexRunnerGame({ onBackToMenu, tournamentType = 'none', skipInitialTransaction = false }: ApexRunnerGameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [showStartButton, setShowStartButton] = useState(true)
   const [showHowToPlay, setShowHowToPlay] = useState(true)
@@ -1108,8 +1108,8 @@ export default function ApeRunGame({ onBackToMenu, tournamentType = 'none', skip
   const handleShareCast = () => {
     if (actions?.composeCast) {
       actions.composeCast({
-        text: `I just scored ${finalScore} bananas on Ape Run! 🍌\n\nPlay now to be part of this bigger ecosystem and climb to the top of the leaderboard! 🏆`,
-        embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/ape-run'],
+        text: `I just scored ${finalScore} bananas on Apex Runner! 🍌\n\nPlay now to be part of this bigger ecosystem and climb to the top of the leaderboard! 🏆`,
+        embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/apex-runner'],
       })
     }
   }

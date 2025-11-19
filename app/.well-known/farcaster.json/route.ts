@@ -3,8 +3,6 @@ import { APP_URL } from "../../../lib/constants";
 
 export async function GET() {
   const farcasterConfig = {
-    // TODO: Add your own account association
-    // {
 
     "accountAssociation": {
     "header": "eyJmaWQiOjEzMTcwNzEsInR5cGUiOiJhdXRoIiwia2V5IjoiMHhiNmVEMzEzZEMzMWZjNjBEMzhDQTQ5MGYzMDYxNzk5NzkzQzE3NWEwIn0",
@@ -14,14 +12,14 @@ export async function GET() {
     // },
     frame: {
       version: "1",
-      name: "Ape Run",
+      name: "Apex Runner",
       iconUrl: `${APP_URL}/images/icon.png`,
       homeUrl: `${APP_URL}`,
       imageUrl: `${APP_URL}/images/feed.png`,
       screenshotUrls: [],
-      tags: ["nft", "farcaster", "mint", "FarApe"],
-      primaryCategory: "social",
-      buttonTitle: "Launch Ape Runc",
+      tags: ["game", "farcaster", "apexrunner", "ApexRunner"],
+      primaryCategory: "games",
+      buttonTitle: "Launch Apex Runner",
       splashImageUrl: `${APP_URL}/images/splash.png`,
       splashBackgroundColor: "#0f172a",
       webhookUrl: `${APP_URL}/api/webhook`,
