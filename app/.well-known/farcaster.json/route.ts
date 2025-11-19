@@ -19,7 +19,7 @@ export async function GET() {
       homeUrl: `${APP_URL}`,
       imageUrl: `${APP_URL}/images/feed.png`,
       screenshotUrls: [],
-      tags: ["apex", "apex runner", "mint", "Apex Runner", "game", "recess", "base", "apex run", "APRX"],
+      tags: ["apex","apex runner","mint","Apex Runner","game","recess","base","apex run","APRX"],
       primaryCategory: "games",
       buttonTitle: "Launch Apex Runner",
       splashImageUrl: `${APP_URL}/images/splash.png`,
