@@ -141,7 +141,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
           {/* Footer spacing */}
           <div className="flex-shrink-0 p-3 pt-2 border-t-2 border-yellow-500/30">
             <p className="text-center text-gray-400" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '8px', lineHeight: '1.2' }}>
-              🏃 Apex Runner
+              Apex Runner
             </p>
           </div>
         </div>

@@ -19,9 +19,9 @@ const frame = {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: '🏃 Apex Runner - Farcaster Game',
+    title: 'Apex Runner - Farcaster Game',
     openGraph: {
-      title: '🏃 Apex Runner',
+      title: 'Apex Runner',
       description: 'Climb the tree! Dodge the branches! Collect the bananas!',
     },
     other: {
