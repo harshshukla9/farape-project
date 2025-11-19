@@ -161,28 +161,71 @@ export default function ApeRunApp() {
 
 // Leaderboard component
 function LeaderboardPage({ onBack }: { onBack: () => void }) {
+  const { context, actions } = useFrame()
   const [leaderboard, setLeaderboard] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [userScore, setUserScore] = useState<any>(null)
+  const itemsPerPage = 10
 
   useEffect(() => {
-    fetch('/api/leaderboard?limit=100')
+    fetch('/api/leaderboard?limit=1000')
       .then(res => res.json())
       .then(data => {
-        if (data.success) setLeaderboard(data.data)
+        if (data.success) {
+          setLeaderboard(data.data)
+          
+          // Find current user's score
+          if (context?.user?.fid) {
+            const userEntry = data.data.find((entry: any) => entry.fid === context.user.fid)
+            if (userEntry) {
+              const userRank = data.data.findIndex((entry: any) => entry.fid === context.user.fid) + 1
+              setUserScore({ ...userEntry, rank: userRank })
+            }
+          }
+        }
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [])
+  }, [context?.user?.fid])
 
-  const getRankDisplay = (index: number) => {
-    if (index === 0) return '🥇'
-    if (index === 1) return '🥈'
-    if (index === 2) return '🥉'
-    return `#${index + 1}`
+  const totalPages = Math.ceil(leaderboard.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentEntries = leaderboard.slice(startIndex, endIndex)
+
+  const getRankDisplay = (rank: number) => {
+    if (rank === 1) return '🥇'
+    if (rank === 2) return '🥈'
+    if (rank === 3) return '🥉'
+    return `#${rank}`
   }
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`
+  }
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prev => Math.max(1, prev - 1))
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(totalPages, prev + 1))
+  }
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const handleShareRank = () => {
+    if (!userScore || !actions?.composeCast) return
+    
+    const rankEmoji = userScore.rank === 1 ? '🥇' : userScore.rank === 2 ? '🥈' : userScore.rank === 3 ? '🥉' : `#${userScore.rank}`
+    
+    actions.composeCast({
+      text: `${rankEmoji} Ranked ${userScore.rank === 1 ? '1st' : userScore.rank === 2 ? '2nd' : userScore.rank === 3 ? '3rd' : `#${userScore.rank}`} on Ape Run Leaderboard! 🍌\n\nScore: ${userScore.score} Base tokens collected\n\n🏆 Win your share of $70 prize pool!\nIt all depends on your skills! 🎮\n\nPlay now:`,
+      embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/ape-run'],
+    })
   }
 
   return (
@@ -206,22 +249,95 @@ function LeaderboardPage({ onBack }: { onBack: () => void }) {
               <p className="text-white" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>No scores yet. Be the first to play!</p>
             </div>
           ) : (
-            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-              {leaderboard.map((entry, index) => (
-                <div
-                  key={entry.fid}
-                  className={`bg-purple-800/50 border-2 rounded-lg p-4 flex items-center gap-4 transition-all hover:bg-purple-700/50 ${
-                    index < 3 ? 'border-yellow-400' : 'border-purple-600'
-                  }`}
-                >
-                  <div className="min-w-[50px] text-center">
-                    <span 
-                      className="text-2xl font-bold text-yellow-300"
-                      style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+            <>
+              {/* User's Score Highlight */}
+              {userScore && (
+                <div className="mb-6 bg-gradient-to-r from-blue-600 to-purple-600 border-4 border-yellow-400 rounded-lg p-4 shadow-xl animate-pulse-slow">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-yellow-300 text-xs font-bold flex-1 text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+                      YOUR RANK
+                    </p>
+                    <button
+                      onClick={handleShareRank}
+                      className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold rounded-lg border-2 border-white text-xs transition-all shadow-lg hover:shadow-xl"
+                      style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}
                     >
-                      {getRankDisplay(index)}
-                    </span>
+                      📢 Cast
+                    </button>
                   </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 flex-1">
+                      <span 
+                        className="font-bold text-2xl min-w-[40px] text-center"
+                        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+                      >
+                        {getRankDisplay(userScore.rank)}
+                      </span>
+                      {userScore.pfpUrl && (
+                        <img 
+                          src={userScore.pfpUrl} 
+                          alt={userScore.displayName || userScore.username || 'You'}
+                          className="w-12 h-12 rounded-full border-2 border-yellow-400"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p 
+                          className="text-white font-bold truncate"
+                          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+                        >
+                          {userScore.displayName || userScore.username || 'You'}
+                        </p>
+                        <p 
+                          className="text-gray-300 text-xs"
+                          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}
+                        >
+                          {formatAddress(userScore.walletAddress)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div 
+                        className="text-yellow-300 font-bold text-3xl"
+                        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+                      >
+                        {userScore.score}
+                      </div>
+                      <div 
+                        className="text-gray-300 text-xs"
+                        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
+                      >
+                        Base
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Leaderboard Entries */}
+              <div className="space-y-3">
+                {currentEntries.map((entry, index) => {
+                  const rank = startIndex + index + 1
+                  const isCurrentUser = context?.user?.fid && entry.fid === context.user.fid
+                  
+                  return (
+                    <div
+                      key={entry.fid}
+                      className={`border-2 rounded-lg p-4 flex items-center gap-4 transition-all ${
+                        isCurrentUser 
+                          ? 'bg-blue-600/30 border-blue-400 ring-2 ring-blue-400' 
+                          : rank <= 3 
+                            ? 'bg-purple-800/50 border-yellow-400 hover:bg-purple-700/50' 
+                            : 'bg-purple-800/50 border-purple-600 hover:bg-purple-700/50'
+                      }`}
+                    >
+                      <div className="min-w-[50px] text-center">
+                        <span 
+                          className="text-2xl font-bold text-yellow-300"
+                          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+                        >
+                          {getRankDisplay(rank)}
+                        </span>
+                      </div>
                   <div className="flex-1 flex items-center gap-3">
                     {entry.pfpUrl && (
                       <img
@@ -267,9 +383,71 @@ function LeaderboardPage({ onBack }: { onBack: () => void }) {
                       Base
                     </div>
                   </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="mt-6 flex items-center justify-center gap-2">
+                  <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-lg border-2 border-black transition-all"
+                    style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+                  >
+                    ← Previous
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      let pageNum
+                      if (totalPages <= 5) {
+                        pageNum = i + 1
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i
+                      } else {
+                        pageNum = currentPage - 2 + i
+                      }
+                      
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => goToPage(pageNum)}
+                          className={`px-3 py-2 font-bold rounded-lg border-2 border-black transition-all ${
+                            currentPage === pageNum
+                              ? 'bg-yellow-500 text-black'
+                              : 'bg-purple-600 hover:bg-purple-700 text-white'
+                          }`}
+                          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+                        >
+                          {pageNum}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-lg border-2 border-black transition-all"
+                    style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
+                  >
+                    Next →
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+
+              {/* Page Info */}
+              <div className="mt-4 text-center">
+                <p className="text-gray-400 text-sm" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '12px' }}>
+                  Showing {startIndex + 1}-{Math.min(endIndex, leaderboard.length)} of {leaderboard.length} players
+                </p>
+              </div>
+            </>
           )}
         </div>
 
