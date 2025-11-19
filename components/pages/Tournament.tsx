@@ -241,7 +241,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
     
     actions.composeCast({
       text: castText,
-      embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/ape-run'],
+      embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/apex-runner'],
     })
   }
 
