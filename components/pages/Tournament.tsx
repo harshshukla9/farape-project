@@ -25,7 +25,7 @@ interface TournamentData {
 }
 
 export default function Tournament({ onBack, onStartTournament }: TournamentProps) {
-  const { context } = useFrame()
+  const { context, actions } = useFrame()
   const { address, isConnected } = useAccount()
   const { hasNFT, isLoading: isLoadingNFT } = useAlchemyNFTs()
   const { startGame, isPending: isContractPending } = useStartGame()
@@ -36,6 +36,9 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
   const [hasEntered, setHasEntered] = useState(false)
   const [txStatus, setTxStatus] = useState<string>('')
   const [timeRemaining, setTimeRemaining] = useState<string>('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [userScore, setUserScore] = useState<any>(null)
+  const itemsPerPage = 10
 
   const fid = context?.user?.fid
   const username = context?.user?.username
@@ -77,10 +80,24 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
   const fetchTournamentData = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/tournament/${selectedTournament}`)
+      // Fetch ALL tournament entries (not just top 20)
+      const response = await fetch(`/api/tournament/${selectedTournament}?limit=1000`)
       const data = await response.json()
       if (data.success) {
         setTournamentData(data)
+        
+        // Find current user's score in tournament
+        if (fid && data.data && data.data.length > 0) {
+          const userEntry = data.data.find((entry: any) => entry.fid === fid)
+          if (userEntry) {
+            const userRank = data.data.findIndex((entry: any) => entry.fid === fid) + 1
+            setUserScore({ ...userEntry, rank: userRank })
+          } else {
+            setUserScore(null)
+          }
+        } else {
+          setUserScore(null)
+        }
       }
     } catch (error) {
       console.error('Error fetching tournament data:', error)
@@ -90,8 +107,10 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
   }
 
   useEffect(() => {
+    setCurrentPage(1) // Reset to page 1 when switching tournaments
+    setUserScore(null)
     fetchTournamentData()
-  }, [selectedTournament])
+  }, [selectedTournament, fid])
 
   // Update user's NFT status if they have NFT
   useEffect(() => {
@@ -199,11 +218,54 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
   }
 
   const handleBuyNFT = () => {
-    window.open('https://farcaster.xyz/miniapps/sqYk09wRm676/farape', '_blank')
+    window.open('https://farcaster.xyz/miniapps/sqYk09wRm676/apex-runner', '_blank')
+  }
+
+  const handleShareTournamentRank = () => {
+    if (!userScore || !actions?.composeCast) return
+    
+    const rankEmoji = userScore.rank === 1 ? '🥇' : userScore.rank === 2 ? '🥈' : userScore.rank === 3 ? '🥉' : `#${userScore.rank}`
+    const tournamentName = selectedTournament === 'public' ? 'Public Tournament' : 'NFT Holders Tournament'
+    const prizePool = selectedTournament === 'public' ? '$20' : '$50'
+    const prizeAmount = getPrizeForRank(userScore.rank)
+    
+    let castText = `${rankEmoji} Ranked ${userScore.rank === 1 ? '1st' : userScore.rank === 2 ? '2nd' : userScore.rank === 3 ? '3rd' : `#${userScore.rank}`} in ${tournamentName}! 🍌\n\nScore: ${userScore.score} Base tokens`
+    
+    if (prizeAmount !== '-') {
+      castText += `\n💰 Winning ${prizeAmount} from ${prizePool} prize pool!`
+    } else {
+      castText += `\n\n🏆 Win your share of ${prizePool} prize pool! @recessdotfun `
+    }
+    
+    castText += `\n\nIt all depends on your skills! 🎮\n\nJoin the tournament:`
+    
+    actions.composeCast({
+      text: castText,
+      embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/ape-run'],
+    })
   }
 
   const canEnterPublic = true
   const canEnterNFT = isConnected && hasNFT
+
+  // Pagination calculations
+  const totalEntries = tournamentData?.data?.length || 0
+  const totalPages = Math.ceil(totalEntries / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentEntries = tournamentData?.data?.slice(startIndex, endIndex) || []
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prev => Math.max(1, prev - 1))
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(totalPages, prev + 1))
+  }
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page)
+  }
 
   // Function to get prize for rank
   const getPrizeForRank = (rank: number): string => {
@@ -244,6 +306,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
             onClick={() => {
               setSelectedTournament('public')
               setHasEntered(false)
+              setCurrentPage(1)
             }}
             className={`flex-1 py-4 px-6 rounded-lg font-bold border-4 border-black transition-all ${
               selectedTournament === 'public'
@@ -262,6 +325,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
             onClick={() => {
               setSelectedTournament('nft')
               setHasEntered(false)
+              setCurrentPage(1)
             }}
             className={`flex-1 py-4 px-6 rounded-lg font-bold border-4 border-black transition-all ${
               selectedTournament === 'nft'
@@ -347,6 +411,67 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                 </div>
               ) : tournamentData?.data && tournamentData.data.length > 0 ? (
                 <>
+                  {/* User's Score Highlight */}
+                  {userScore && (
+                    <div className="mb-3 bg-gradient-to-r from-blue-600 to-purple-600 border-2 border-yellow-400 rounded-lg p-3 shadow-xl animate-pulse-slow">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-yellow-300 text-xs font-bold flex-1 text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}>
+                          YOUR RANK
+                        </p>
+                        <button
+                          onClick={handleShareTournamentRank}
+                          className="px-2 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold rounded border border-white text-xs transition-all shadow-lg hover:shadow-xl"
+                          style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}
+                        >
+                          📢 Cast
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <span 
+                            className="font-bold text-xl min-w-[28px] text-center"
+                            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+                          >
+                            {userScore.rank === 1 ? '🥇' : userScore.rank === 2 ? '🥈' : userScore.rank === 3 ? '🥉' : `#${userScore.rank}`}
+                          </span>
+                          {userScore.pfpUrl && (
+                            <img 
+                              src={userScore.pfpUrl} 
+                              alt="You"
+                              className="w-8 h-8 rounded-full border border-yellow-400"
+                            />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p 
+                              className="text-white font-bold truncate"
+                              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}
+                            >
+                              {userScore.displayName || userScore.username || 'You'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <p 
+                            className="text-yellow-300 font-bold text-lg"
+                            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+                          >
+                            {userScore.score}
+                          </p>
+                          {getPrizeForRank(userScore.rank) !== '-' && (
+                            <div className="px-2 py-0.5 rounded bg-yellow-500 text-black">
+                              <p 
+                                className="font-bold whitespace-nowrap"
+                                style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}
+                              >
+                                {getPrizeForRank(userScore.rank)}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {tournamentData.isFallback && (
                     <div className="mb-3 p-2 bg-blue-600/20 border border-blue-400 rounded">
                       <p className="text-blue-300 text-xs text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}>
@@ -354,18 +479,21 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                       </p>
                     </div>
                   )}
-                  <div className="space-y-1.5 max-h-[250px] overflow-y-auto">
-                    {tournamentData.data.slice(0, 10).map((entry, index) => {
-                      const rank = index + 1
+                  <div className="space-y-1.5">
+                    {currentEntries.map((entry, index) => {
+                      const rank = startIndex + index + 1
                       const prize = getPrizeForRank(rank)
+                      const isCurrentUser = fid && entry.fid === fid
                       
                       return (
                         <div 
                           key={index}
                           className={`flex items-center justify-between p-2 rounded border ${
-                            rank <= 3 
-                              ? 'bg-yellow-900/20 border-yellow-500/50' 
-                              : 'bg-gray-800/50 border-gray-700'
+                            isCurrentUser
+                              ? 'bg-blue-600/30 border-blue-400 ring-1 ring-blue-400'
+                              : rank <= 3 
+                                ? 'bg-yellow-900/20 border-yellow-500/50' 
+                                : 'bg-gray-800/50 border-gray-700'
                           }`}
                         >
                           <div className="flex items-center gap-2 flex-1">
@@ -423,8 +551,69 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                       )
                     })}
                   </div>
+
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="mt-3 flex items-center justify-center gap-1">
+                      <button
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                        className="px-2 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded border border-black transition-all text-xs"
+                        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
+                      >
+                        ←
+                      </button>
+
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: Math.min(3, totalPages) }, (_, i) => {
+                          let pageNum
+                          if (totalPages <= 3) {
+                            pageNum = i + 1
+                          } else if (currentPage <= 2) {
+                            pageNum = i + 1
+                          } else if (currentPage >= totalPages - 1) {
+                            pageNum = totalPages - 2 + i
+                          } else {
+                            pageNum = currentPage - 1 + i
+                          }
+                          
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => goToPage(pageNum)}
+                              className={`px-2 py-1 font-bold rounded border border-black transition-all text-xs ${
+                                currentPage === pageNum
+                                  ? 'bg-yellow-500 text-black'
+                                  : 'bg-purple-600 hover:bg-purple-700 text-white'
+                              }`}
+                              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
+                            >
+                              {pageNum}
+                            </button>
+                          )
+                        })}
+                      </div>
+
+                      <button
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                        className="px-2 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded border border-black transition-all text-xs"
+                        style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
+                      >
+                        →
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Page Info */}
+                  <div className="mt-2 text-center">
+                    <p className="text-gray-400 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}>
+                      {startIndex + 1}-{Math.min(endIndex, totalEntries)} of {totalEntries}
+                    </p>
+                  </div>
+
                   {!tournamentData.isFallback && (
-                    <div className="mt-3 pt-3 border-t border-yellow-500/30">
+                    <div className="mt-2 pt-2 border-t border-yellow-500/30">
                       <p className="text-yellow-300 text-xs text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}>
                         🏆 Official tournament rankings
                       </p>
