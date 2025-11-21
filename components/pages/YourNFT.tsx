@@ -19,21 +19,21 @@ export default function YourNFT({ onBack }: YourNFTProps) {
           className="text-4xl font-bold text-yellow-300 mb-4"
           style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '32px', lineHeight: '1.5' }}
         >
-          Your Tickets
+          Your NFTs
         </h1>
         
         <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-8">
           {!isConnected ? (
             <div className="text-center py-8">
               <p className="text-white mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px', lineHeight: '1.6' }}>
-                Connect your wallet to view your Tickets
+                Connect your wallet to view your NFTs
               </p>
               <WalletConnectButton />
             </div>
           ) : isLoading ? (
             <div className="text-center py-8">
               <p className="text-yellow-300 mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}>
-                Loading Tickets...
+                Loading NFTs...
               </p>
               <div className="flex justify-center">
                 <img src="/2.png" alt="Loading" className="w-16 h-16 object-contain animate-spin" />
@@ -125,7 +125,7 @@ export default function YourNFT({ onBack }: YourNFTProps) {
           ) : (
             <div className="text-center py-8">
               <div className="flex justify-center mb-4">
-                <img src="/2.png" alt="No Tickets" className="w-16 h-16 object-contain" />
+                <img src="/2.png" alt="No NFTs" className="w-16 h-16 object-contain" />
               </div>
               <p className="text-gray-300 mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '12px', lineHeight: '1.8' }}>
                 You don't own any Ape NFTs yet.
@@ -138,7 +138,7 @@ export default function YourNFT({ onBack }: YourNFTProps) {
                 className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-lg border-4 border-black"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
               >
-                Buy Tickets
+                Buy NFT
               </button>
             </div>
           )}

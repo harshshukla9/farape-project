@@ -1,12 +1,22 @@
 'use client'
 
+import { sdk } from '@farcaster/miniapp-sdk'
+
 interface BuyNFTProps {
   onBack: () => void
 }
 
 export default function BuyNFT({ onBack }: BuyNFTProps) {
-  const handleGetFarapes = () => {
-    window.open('https://farcaster.xyz/miniapps/lD8uzclJ4Cii/apex-runner', '_blank')
+  const handleGetNFT = async () => {
+    try {
+      await sdk.actions.openMiniApp({
+        url: 'https://farcaster.xyz/miniapps/sqYk09wRm676/farape'
+      })
+    } catch (error) {
+      console.error('Error opening mint app:', error)
+      // Fallback to window.open if SDK fails
+      window.open('https://farcaster.xyz/miniapps/sqYk09wRm676/farape', '_blank')
+    }
   }
 
   return (
@@ -16,7 +26,7 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
           className="text-4xl font-bold text-yellow-300 mb-4"
           style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '32px', lineHeight: '1.5' }}
         >
-          Buy Ticket
+          Buy NFT
         </h1>
         
         <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-8">
@@ -26,23 +36,23 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
                 className="text-yellow-300 mb-4"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '18px' }}
               >
-                Get Your Tickets for the Tournament
+                Get Your NFTs for the Tournament
               </h3>
               <div className="text-white text-sm mb-6" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px', lineHeight: '1.8' }}>
-                <p className="mb-4">🦍 Unlock special abilities and bonus points!</p>
+                <p className="mb-4">🎨 Unlock special abilities and bonus points!</p>
                 <p className="text-gray-300">Get exclusive tournament access and enhanced rewards.</p>
               </div>
               <button 
-                onClick={handleGetFarapes}
+                onClick={handleGetNFT}
                 className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
-                 Tickets will be live soon
+                 Mint NFT Now
               </button>
             </div>
             
             <p className="text-gray-300 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.8' }}>
-              Tickets holders get special abilities, bonus points, and exclusive tournament access!
+              NFT holders get special abilities, bonus points, and exclusive tournament access!
             </p>
           </div>
         </div>

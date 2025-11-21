@@ -86,7 +86,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
               style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
-              Buy Tickets
+              Buy NFT
             </button>
 
             <button
@@ -102,7 +102,7 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
               style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
             >
-              Your Tickets
+              Your NFTs
             </button>
 
             <button
