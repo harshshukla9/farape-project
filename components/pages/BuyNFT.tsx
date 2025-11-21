@@ -16,7 +16,7 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
           className="text-4xl font-bold text-yellow-300 mb-4"
           style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '32px', lineHeight: '1.5' }}
         >
-          Buy NFT
+          Buy Ticket
         </h1>
         
         <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-8">
@@ -37,12 +37,12 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
                 className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
-                Get Tickets
+                Tickets Going LIVE SOON
               </button>
             </div>
             
             <p className="text-gray-300 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.8' }}>
-              NFT holders get special abilities, bonus points, and exclusive tournament access!
+              Ticket holders get special abilities, bonus points, and exclusive tournament access!
             </p>
           </div>
         </div>
