@@ -16,7 +16,7 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
           className="text-4xl font-bold text-yellow-300 mb-4"
           style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '32px', lineHeight: '1.5' }}
         >
-          {/* //pushed */}
+          {/* //pushed j*/}
           Buy Tickets 
         </h1>
         
