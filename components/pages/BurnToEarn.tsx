@@ -21,14 +21,14 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
           className="text-3xl font-bold text-yellow-300 mb-4"
           style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '28px', lineHeight: '1.5' }}
         >
-          Ticket Burn to Earn
+          NFT Burn to Earn
         </h1>
         
         <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-8">
           <div className="space-y-6">
             <div className="bg-red-900/50 border-2 border-red-500 rounded-lg p-6">
               <p className="text-red-300 text-xs mb-4" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px', lineHeight: '1.8' }}>
-                Warning: Burning Tickets is permanent and cannot be undone!
+                Warning: Burning NFTs is permanent and cannot be undone!
               </p>
             </div>
 
@@ -37,7 +37,7 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
                 className="text-yellow-300 mb-4"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '16px' }}
               >
-                Select Tickets to Burn
+                Select NFTs to Burn
               </h3>
               <div className="space-y-3">
                 {nfts.map((nft) => (
@@ -79,13 +79,13 @@ export default function BurnToEarn({ onBack }: BurnToEarnProps) {
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 border-4 border-black shadow-lg"
                 style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
               >
-                Burn Ticket
+                Burn NFT
               </button>
             )}
 
             <div className="bg-green-900/50 border-2 border-green-500 rounded-lg p-4">
               <p className="text-green-300 text-xs" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px', lineHeight: '1.6' }}>
-                Tip: Higher rarity Tickets yield more tokens when burned!
+                Tip: Higher rarity NFTs yield more tokens when burned!
               </p>
             </div>
           </div>

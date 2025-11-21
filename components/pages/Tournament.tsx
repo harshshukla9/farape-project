@@ -6,6 +6,7 @@ import { WalletConnectButton } from '@/components/WalletConnectButton'
 import { useFrame } from '@/components/farcaster-provider'
 import { useStartGame } from '@/smartcontracthooks/useStartGame'
 import { useState, useEffect } from 'react'
+import { sdk } from '@farcaster/miniapp-sdk'
 
 interface TournamentProps {
   onBack: () => void
@@ -217,8 +218,16 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
     }
   }
 
-  const handleBuyNFT = () => {
-    window.open('https://farcaster.xyz/miniapps/sqYk09wRm676/apex-runner', '_blank')
+  const handleBuyNFT = async () => {
+    try {
+      await sdk.actions.openMiniApp({
+        url: 'https://farcaster.xyz/miniapps/sqYk09wRm676/farape'
+      })
+    } catch (error) {
+      console.error('Error opening mint app:', error)
+      // Fallback to window.open if SDK fails
+      window.open('https://farcaster.xyz/miniapps/sqYk09wRm676/farape', '_blank')
+    }
   }
 
   const handleShareTournamentRank = () => {
@@ -688,7 +697,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                     style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '14px' }}
                     onClick={handleBuyNFT}
                 >
-                  Buy Tickets to Enter
+                  Buy NFT to Enter
                 </button>
                   <p className="text-red-300 text-xs text-center" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px', lineHeight: '1.6' }}>
                     You need to own an Ape NFT to participate in this tournament

@@ -1,6 +1,7 @@
 'use client'
 
 import { useFrame } from '@/components/farcaster-provider'
+import { sdk } from '@farcaster/miniapp-sdk'
 
 interface MainMenuProps {
   onStartGame: () => void
@@ -16,6 +17,16 @@ export default function MainMenu({ onStartGame, onNavigateToTournament }: MainMe
     // Navigate to tournament page
     if (onNavigateToTournament) {
       onNavigateToTournament()
+    }
+  }
+
+  const handleMintNFT = async () => {
+    try {
+      await sdk.actions.openMiniApp({
+        url: 'https://farcaster.xyz/miniapps/sqYk09wRm676/farape'
+      })
+    } catch (error) {
+      console.error('Error opening mint app:', error)
     }
   }
 
@@ -66,6 +77,15 @@ export default function MainMenu({ onStartGame, onNavigateToTournament }: MainMe
             style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
           >
             PLAY
+          </button>
+
+          {/* MINT NFT Button */}
+          <button
+            onClick={handleMintNFT}
+            className="w-full max-w-md px-12 py-4 bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:from-purple-600 hover:via-purple-700 hover:to-purple-800 text-white font-bold text-xl rounded-xl border-4 border-black transition-all duration-200 shadow-2xl hover:shadow-3xl transform hover:scale-105 active:scale-95"
+            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+          >
+            🎨 MINT NFT NOW TO ACCESS REWARDS
           </button>
 
           {/* Game Info */}
