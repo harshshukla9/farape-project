@@ -6,7 +6,7 @@ interface BuyNFTProps {
 
 export default function BuyNFT({ onBack }: BuyNFTProps) {
   const handleGetFarapes = () => {
-    window.open('https://farcaster.xyz/miniapps/sqYk09wRm676/farape', '_blank')
+    window.open('https://farcaster.xyz/miniapps/lD8uzclJ4Cii/apex-runner', '_blank')
   }
 
   return (
