@@ -24,6 +24,7 @@ export default function ApexRunnerGame({ onBackToMenu, tournamentType = 'none', 
   const [isStartingGame, setIsStartingGame] = useState(false)
   const gameStateRef = useRef<any>(null)
   const scoreSavedRef = useRef(false)
+  const gameStartTimeRef = useRef<number>(0)
   const { isSDKLoaded, context, actions } = useFrame()
   const { address, isConnected } = useAccount()
   const { hasNFT } = useAlchemyNFTs()
@@ -106,6 +107,7 @@ export default function ApexRunnerGame({ onBackToMenu, tournamentType = 'none', 
             ...scoreData,
             tournamentType: tournamentType,
             hasNFT: hasNFT || false,
+            gameStartTime: gameStartTimeRef.current, // Add game start time for verification
           }),
         })
 
@@ -948,6 +950,7 @@ export default function ApexRunnerGame({ onBackToMenu, tournamentType = 'none', 
 
       state.gameRunning = true
       state.lastTime = performance.now()
+      gameStartTimeRef.current = Date.now() // Record game start time for score verification
       if (typeof window !== 'undefined' && (window as any).FarcadeSDK) {
         ;(window as any).FarcadeSDK.singlePlayer.actions.ready()
       }
