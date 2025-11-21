@@ -6,7 +6,7 @@ interface BuyNFTProps {
 
 export default function BuyNFT({ onBack }: BuyNFTProps) {
   const handleGetFarapes = () => {
-    window.open('https://farcaster.xyz/miniapps/sqYk09wRm676/farape', '_blank')
+    window.open('https://farcaster.xyz/miniapps/lD8uzclJ4Cii/apex-runner', '_blank')
   }
 
   return (
@@ -16,7 +16,7 @@ export default function BuyNFT({ onBack }: BuyNFTProps) {
           className="text-4xl font-bold text-yellow-300 mb-4"
           style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '32px', lineHeight: '1.5' }}
         >
-          Buy NFT
+          Buy Tickets 
         </h1>
         
         <div className="bg-black/50 border-4 border-yellow-500 rounded-lg p-8">
