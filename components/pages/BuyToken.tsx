@@ -11,7 +11,7 @@ interface BuyTokenProps {
 
 const TOKEN_ADDRESS = '0x905E5c99bd3af541033066db9e2DD7A44aa96b07' as const
 const BASE_CHAIN_ID = base.id
-const CLANKER_MINI_APP_URL = 'https://farcaster.xyz/miniapps/qKUP9wamkuFf/clanker'
+const CLANKER_MINI_APP_URL = 'https://clanker.world/clanker/0x905E5c99bd3af541033066db9e2DD7A44aa96b07'
 const CLANKER_WEBSITE_URL = `https://www.clanker.world/clanker/${TOKEN_ADDRESS}`
 
 export default function BuyToken({ onBack }: BuyTokenProps) {
