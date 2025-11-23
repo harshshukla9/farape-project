@@ -147,7 +147,7 @@ export default function BuyToken({ onBack }: BuyTokenProps) {
             {chainId && chainId !== BASE_CHAIN_ID && (
               <div className="bg-red-900/50 border-2 border-red-400 rounded-lg p-4">
                 <p className="text-red-300 text-sm font-bold" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '13px' }}>
-                  ⚠️ Please switch to Base network to buy tokens
+                  Please switch to Base network to buy tokens
                 </p>
               </div>
             )}
