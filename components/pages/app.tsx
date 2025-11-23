@@ -4,6 +4,7 @@ import ApexRunnerGame from '@/components/ApexRunnerGame'
 import MainMenu from '@/components/MainMenu'
 import HamburgerMenu from '@/components/HamburgerMenu'
 import BuyNFT from '@/components/pages/BuyNFT'
+import BuyToken from '@/components/pages/BuyToken'
 import DailyReward from '@/components/pages/DailyReward'
 import YourNFT from '@/components/pages/YourNFT'
 import Tournament from '@/components/pages/Tournament'
@@ -13,7 +14,7 @@ import { SafeAreaContainer } from '@/components/safe-area-container'
 import { useEffect, useState } from 'react'
 import type { GameScore } from '@/lib/scores'
 
-type AppPage = 'main-menu' | 'game' | 'buy-nft' | 'daily-reward' | 'your-nft' | 'tournament' | 'burn-to-earn' | 'leaderboard'
+type AppPage = 'main-menu' | 'game' | 'buy-nft' | 'buy-token' | 'daily-reward' | 'your-nft' | 'tournament' | 'burn-to-earn' | 'leaderboard'
 type TournamentType = 'public' | 'nft' | 'none'
 
 export default function ApexRunnerApp() {
@@ -131,11 +132,13 @@ export default function ApexRunnerApp() {
   const renderPage = () => {
     switch (currentPage) {
       case 'main-menu':
-        return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} />
+        return <MainMenu onStartGame={handleStartGame} onNavigateToTournament={handleNavigateToTournament} onNavigate={handleNavigate} />
       case 'game':
         return <ApexRunnerGame onBackToMenu={handleBackToMainMenu} tournamentType={activeTournament} skipInitialTransaction={skipInitialTransaction} />
       case 'buy-nft':
         return <BuyNFT onBack={handleBackToMainMenu} />
+      case 'buy-token':
+        return <BuyToken onBack={handleBackToMainMenu} />
       case 'daily-reward':
         return <DailyReward onBack={handleBackToMainMenu} />
       case 'your-nft':

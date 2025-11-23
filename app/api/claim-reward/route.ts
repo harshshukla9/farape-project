@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { claimReward, canUserClaimReward, getUserClaimStats } from '@/lib/rewards';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -23,12 +25,26 @@ export async function POST(request: NextRequest) {
     });
 
     if (!result.success) {
+      // Determine appropriate status code based on error type
+      let statusCode = 400; // Default to bad request
+      
+      if (result.error?.includes('Daily claim limit reached') || result.error?.includes('limit reached')) {
+        statusCode = 429; // Rate limit
+      } else if (result.error?.includes('Insufficient') || result.error?.includes('score')) {
+        statusCode = 403; // Forbidden - doesn't meet requirements
+      } else if (result.contractBalanceLow || result.error?.includes('balance too low')) {
+        statusCode = 503; // Service unavailable
+      }
+      
       return NextResponse.json({
         success: false,
-        error: result.error || 'Daily reward limit reached',
+        error: result.error || 'Failed to claim reward',
         claimsToday: result.claimsToday,
-        remainingClaims: result.remainingClaims
-      }, { status: 429 });
+        remainingClaims: result.remainingClaims,
+        userScore: result.userScore,
+        requiredScore: result.requiredScore,
+        contractBalanceLow: result.contractBalanceLow
+      }, { status: statusCode });
     }
 
     return NextResponse.json({
