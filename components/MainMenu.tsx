@@ -6,9 +6,10 @@ import { sdk } from '@farcaster/miniapp-sdk'
 interface MainMenuProps {
   onStartGame: () => void
   onNavigateToTournament?: () => void
+  onNavigate?: (page: string) => void
 }
 
-export default function MainMenu({ onStartGame, onNavigateToTournament }: MainMenuProps) {
+export default function MainMenu({ onStartGame, onNavigateToTournament, onNavigate }: MainMenuProps) {
   const { context } = useFrame()
 
   const handlePlayClick = async () => {
@@ -86,6 +87,19 @@ export default function MainMenu({ onStartGame, onNavigateToTournament }: MainMe
             style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
           >
             🎨 MINT NFT NOW TO ACCESS REWARDS
+          </button>
+
+          {/* BUY TOKEN Button */}
+          <button
+            onClick={() => {
+              if (onNavigate) {
+                onNavigate('buy-token')
+              }
+            }}
+            className="w-full max-w-md px-12 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 text-white font-bold text-xl rounded-xl border-4 border-black transition-all duration-200 shadow-2xl hover:shadow-3xl transform hover:scale-105 active:scale-95"
+            style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+          >
+            💰 BUY TOKEN
           </button>
 
           {/* Game Info */}

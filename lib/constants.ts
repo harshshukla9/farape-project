@@ -56,3 +56,6 @@ export const IMAGE_URLS = {
   cloudImg3: "https://lqy3lriiybxcejon.public.blob.vercel-storage.com/flMXtA5gBN71/c3-owLEiZO4DbNXGkma50QBKUna5rFigR",
   userFace: "/Screenshot 2025-09-24 at 5.29.38 PM.png",
 } as const;
+
+// Token contract address on Base
+export const TOKEN_ADDRESS = '0x905E5c99bd3af541033066db9e2DD7A44aa96b07' as const;

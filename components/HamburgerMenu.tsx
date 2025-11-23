@@ -90,6 +90,14 @@ export default function HamburgerMenu({ onNavigate }: HamburgerMenuProps) {
             </button>
 
             <button
+              onClick={() => handleNavigate('buy-token')}
+              className="w-full px-3 py-2.5 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
+              style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
+            >
+              💰 Buy Token
+            </button>
+
+            <button
               onClick={() => handleNavigate('daily-reward')}
               className="w-full px-3 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-black font-bold border-[3px] border-black rounded-lg transition-all duration-200 shadow-md hover:shadow-xl text-left"
               style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px', lineHeight: '1.3' }}
