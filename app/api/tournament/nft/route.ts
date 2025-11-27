@@ -1,5 +1,16 @@
 import { NextRequest } from "next/server";
 import { getNftTournamentLeaderboardDedicated, updateUserNFTStatus, saveNftTournamentScore } from "@/lib/scores";
+import {
+  NFT_TOURNAMENT_PRIZE_POOL_USD,
+  NFT_TOURNAMENT_PRIZES_USD,
+  formatAprxAmount,
+  buildPrizeMap,
+  APRX_PER_USDC,
+} from "@/lib/tokenomics";
+
+const nftPrizes = buildPrizeMap(NFT_TOURNAMENT_PRIZES_USD);
+const nftPrizePoolLabel = formatAprxAmount(NFT_TOURNAMENT_PRIZE_POOL_USD);
+const exchangeRateLabel = `1 USDC = ${APRX_PER_USDC.toLocaleString()} APRX`;
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,16 +30,11 @@ export async function GET(request: NextRequest) {
     return Response.json({
       success: true,
       tournamentType: "nft",
-      prizePool: "$50",
-      prizes: {
-        "1st": "$20",
-        "2nd": "$12",
-        "3rd": "$8",
-        "4th": "$5",
-        "5th": "$3",
-        "6th": "$1",
-        "7th": "$1"
-      },
+      prizePool: nftPrizePoolLabel,
+      prizePoolUsd: NFT_TOURNAMENT_PRIZE_POOL_USD,
+      prizes: nftPrizes,
+      prizeCount: NFT_TOURNAMENT_PRIZES_USD.length,
+      exchangeRate: exchangeRateLabel,
       endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
       data: leaderboard,
       isFallback: false, // Never show fallback for NFT tournament

@@ -5,8 +5,17 @@ import { useAlchemyNFTs } from '@/app/hooks/useAlchemyNFTs'
 import { WalletConnectButton } from '@/components/WalletConnectButton'
 import { useFrame } from '@/components/farcaster-provider'
 import { useStartGame } from '@/smartcontracthooks/useStartGame'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { sdk } from '@farcaster/miniapp-sdk'
+import {
+  formatAprxAmount,
+  getOrdinalLabel,
+  PUBLIC_TOURNAMENT_PRIZE_POOL_USD,
+  NFT_TOURNAMENT_PRIZE_POOL_USD,
+  buildPrizeMap,
+  PUBLIC_TOURNAMENT_PRIZES_USD,
+  NFT_TOURNAMENT_PRIZES_USD,
+} from '@/lib/tokenomics'
 
 interface TournamentProps {
   onBack: () => void
@@ -20,6 +29,9 @@ interface TournamentData {
   tournamentType: string
   prizePool: string
   prizes: Record<string, string>
+  prizePoolUsd?: number
+  prizeCount?: number
+  exchangeRate?: string
   endTime: string
   data: any[]
   isFallback?: boolean
@@ -44,14 +56,17 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
   const fid = context?.user?.fid
   const username = context?.user?.username
 
-  // Tournament end date: November 17, 2025 + 7 days = November 24, 2025 00:00:00 UTC
-  const TOURNAMENT_END_DATE = new Date('2025-11-24T00:00:00Z').getTime()
+  const defaultPublicPrizes = useMemo(() => buildPrizeMap(PUBLIC_TOURNAMENT_PRIZES_USD), [])
+  const defaultNftPrizes = useMemo(() => buildPrizeMap(NFT_TOURNAMENT_PRIZES_USD), [])
+
+  // Set tournament window to rolling 7 days from page load
+  const [tournamentEndTimestamp] = useState(() => Date.now() + 7 * 24 * 60 * 60 * 1000)
 
   // Update countdown timer
   useEffect(() => {
     const updateTimer = () => {
       const now = Date.now()
-      const difference = TOURNAMENT_END_DATE - now
+      const difference = tournamentEndTimestamp - now
 
       if (difference <= 0) {
         setTimeRemaining('Tournament ended')
@@ -76,7 +91,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
     const interval = setInterval(updateTimer, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [tournamentEndTimestamp])
 
   const fetchTournamentData = async () => {
     setLoading(true)
@@ -230,15 +245,23 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
     }
   }
 
+  const defaultPrizePoolLabel = useMemo(
+    () =>
+      selectedTournament === 'public'
+        ? formatAprxAmount(PUBLIC_TOURNAMENT_PRIZE_POOL_USD)
+        : formatAprxAmount(NFT_TOURNAMENT_PRIZE_POOL_USD),
+    [selectedTournament]
+  )
+
   const handleShareTournamentRank = () => {
     if (!userScore || !actions?.composeCast) return
     
     const rankEmoji = userScore.rank === 1 ? '🥇' : userScore.rank === 2 ? '🥈' : userScore.rank === 3 ? '🥉' : `#${userScore.rank}`
     const tournamentName = selectedTournament === 'public' ? 'Public Tournament' : 'NFT Holders Tournament'
-    const prizePool = selectedTournament === 'public' ? '$20' : '$50'
+    const prizePool = tournamentData?.prizePool || defaultPrizePoolLabel
     const prizeAmount = getPrizeForRank(userScore.rank)
     
-    let castText = `${rankEmoji} Ranked ${userScore.rank === 1 ? '1st' : userScore.rank === 2 ? '2nd' : userScore.rank === 3 ? '3rd' : `#${userScore.rank}`} in ${tournamentName}! 🍌\n\nScore: ${userScore.score} Base tokens`
+    let castText = `${rankEmoji} Ranked ${userScore.rank === 1 ? '1st' : userScore.rank === 2 ? '2nd' : userScore.rank === 3 ? '3rd' : `#${userScore.rank}`} in ${tournamentName}! 🍌\n\nScore: ${userScore.score} APRX tokens`
     
     if (prizeAmount !== '-') {
       castText += `\n💰 Winning ${prizeAmount} from ${prizePool} prize pool!`
@@ -278,26 +301,12 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
 
   // Function to get prize for rank
   const getPrizeForRank = (rank: number): string => {
-    if (selectedTournament === 'public') {
-      // Public Tournament: $20 total
-      if (rank === 1) return '$8'
-      if (rank === 2) return '$5'
-      if (rank === 3) return '$4'
-      if (rank === 4) return '$2'
-      if (rank === 5) return '$1'
-      return '-'
-    } else {
-      // NFT Tournament: $50 total
-      if (rank === 1) return '$20'
-      if (rank === 2) return '$12'
-      if (rank === 3) return '$8'
-      if (rank === 4) return '$5'
-      if (rank === 5) return '$3'
-      if (rank === 6) return '$1'
-      if (rank === 7) return '$1'
-      return '-'
-    }
+    const key = getOrdinalLabel(rank)
+    const prizesMap = tournamentData?.prizes || (selectedTournament === 'public' ? defaultPublicPrizes : defaultNftPrizes)
+    return prizesMap[key] || '-'
   }
+
+  const prizesToDisplay = tournamentData?.prizes || (selectedTournament === 'public' ? defaultPublicPrizes : defaultNftPrizes)
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900">
@@ -326,7 +335,9 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
           >
             <div>
               <div>Public</div>
-              <div className="text-xs mt-1 opacity-80">$20 Prize</div>
+              <div className="text-xs mt-1 opacity-80">
+                {formatAprxAmount(PUBLIC_TOURNAMENT_PRIZE_POOL_USD)}
+              </div>
             </div>
           </button>
 
@@ -345,7 +356,9 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
           >
             <div>
               <div> NFT Holders</div>
-              <div className="text-xs mt-1 opacity-80">$50 Prize</div>
+              <div className="text-xs mt-1 opacity-80">
+                {formatAprxAmount(NFT_TOURNAMENT_PRIZE_POOL_USD)}
+              </div>
             </div>
           </button>
         </div>
@@ -364,11 +377,16 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                     className="text-white font-bold"
                     style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '18px' }}
                   >
-                    {tournamentData?.prizePool || (selectedTournament === 'public' ? '$20' : '$50')} Prize
+                    {tournamentData?.prizePool || defaultPrizePoolLabel} Prize Pool
               </h2>
                   <p className="text-white/90 text-xs mt-0.5" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '11px' }}>
                     {selectedTournament === 'public' ? 'Anyone can play' : 'NFT holders only'}
                   </p>
+                  {tournamentData?.exchangeRate && (
+                    <p className="text-white/70 text-[10px] mt-1" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+                      {tournamentData.exchangeRate}
+                    </p>
+                  )}
                 </div>
                 <div className="bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2 border-2 border-white/20">
                   <p className="text-white/70 text-xs mb-0.5" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px', textAlign: 'center' }}>
@@ -393,7 +411,7 @@ export default function Tournament({ onBack, onStartTournament }: TournamentProp
                 Prize Distribution
               </h3>
               <div className="grid grid-cols-2 gap-1.5">
-                {tournamentData?.prizes && Object.entries(tournamentData.prizes).map(([place, prize]) => (
+                {Object.entries(prizesToDisplay).map(([place, prize]) => (
                   <div key={place} className="bg-black/40 rounded px-2 py-1.5 border border-yellow-500/30">
                     <p className="text-yellow-400" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '9px' }}>
                       {place}

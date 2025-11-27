@@ -1,5 +1,16 @@
 import { NextRequest } from "next/server";
 import { getPublicTournamentLeaderboard, getLeaderboard } from "@/lib/scores";
+import {
+  PUBLIC_TOURNAMENT_PRIZE_POOL_USD,
+  PUBLIC_TOURNAMENT_PRIZES_USD,
+  formatAprxAmount,
+  buildPrizeMap,
+  APRX_PER_USDC,
+} from "@/lib/tokenomics";
+
+const publicPrizes = buildPrizeMap(PUBLIC_TOURNAMENT_PRIZES_USD);
+const prizePoolLabel = formatAprxAmount(PUBLIC_TOURNAMENT_PRIZE_POOL_USD);
+const exchangeRateLabel = `1 USDC = ${APRX_PER_USDC.toLocaleString()} APRX`;
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,14 +28,11 @@ export async function GET(request: NextRequest) {
     return Response.json({
       success: true,
       tournamentType: "public",
-      prizePool: "$20",
-      prizes: {
-        "1st": "$8",
-        "2nd": "$5",
-        "3rd": "$4",
-        "4th": "$2",
-        "5th": "$1"
-      },
+      prizePool: prizePoolLabel,
+      prizePoolUsd: PUBLIC_TOURNAMENT_PRIZE_POOL_USD,
+      prizes: publicPrizes,
+      prizeCount: PUBLIC_TOURNAMENT_PRIZES_USD.length,
+      exchangeRate: exchangeRateLabel,
       endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
       data: leaderboard,
       isFallback: leaderboard.length > 0 && leaderboard[0].publicTournamentScore === undefined,
