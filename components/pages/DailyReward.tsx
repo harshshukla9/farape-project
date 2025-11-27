@@ -301,6 +301,16 @@ export default function DailyReward({ onBack }: DailyRewardProps) {
                     </span>
                   </div>
                 )}
+                <div className="mt-2 bg-yellow-500/10 border border-yellow-500/40 rounded-lg p-2 text-[11px] text-yellow-200 leading-tight">
+                  <p>
+                    Claim #1 deducts <span className="font-semibold text-yellow-300">1K</span> score,
+                    claim #2 deducts <span className="font-semibold text-yellow-300">4K</span>,
+                    and claim #3 deducts <span className="font-semibold text-yellow-300">8K</span>.
+                  </p>
+                  <p className="mt-1">
+                    These points are removed from the leaderboard—make sure you have enough score before claiming.
+                  </p>
+                </div>
                 {!hasEnoughScore && (
                   <div className="text-red-400 text-xs mt-1">
                     ⚠️ Insufficient game score! Play more to earn score.

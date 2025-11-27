@@ -226,7 +226,7 @@ function LeaderboardPage({ onBack }: { onBack: () => void }) {
     const rankEmoji = userScore.rank === 1 ? '🥇' : userScore.rank === 2 ? '🥈' : userScore.rank === 3 ? '🥉' : `#${userScore.rank}`
     
     actions.composeCast({
-      text: `${rankEmoji} Ranked ${userScore.rank === 1 ? '1st' : userScore.rank === 2 ? '2nd' : userScore.rank === 3 ? '3rd' : `#${userScore.rank}`} on Ape Run Leaderboard! 🍌\n\nScore: ${userScore.score} Base tokens collected\n\n🏆 Win your share of $70 prize pool!\nIt all depends on your skills! 🎮\n\nPlay now:`,
+      text: `${rankEmoji} Ranked ${userScore.rank === 1 ? '1st' : userScore.rank === 2 ? '2nd' : userScore.rank === 3 ? '3rd' : `#${userScore.rank}`} on Ape Run Leaderboard! 🍌\n\nScore: ${userScore.score} APRX tokens collected\n\n🏆 Win your share of the APRX prize pool!\nIt all depends on your skills! 🎮\n\nPlay now:`,
       embeds: ['https://farcaster.xyz/miniapps/lD8uzclJ4Cii/ape-run'],
     })
   }
@@ -309,7 +309,7 @@ function LeaderboardPage({ onBack }: { onBack: () => void }) {
                         className="text-gray-300 text-xs"
                         style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
                       >
-                        Base
+                        APRX
                       </div>
                     </div>
                   </div>
@@ -383,7 +383,7 @@ function LeaderboardPage({ onBack }: { onBack: () => void }) {
                       className="text-gray-400 text-xs"
                       style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontSize: '10px' }}
                     >
-                      Base
+                      APRX
                     </div>
                   </div>
                     </div>
